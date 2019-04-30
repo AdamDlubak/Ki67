@@ -24,9 +24,9 @@ class Helper(object):
 
         for idx, feature in enumerate(df[df.columns[0 : variables['feature_numbers']]]):
             plt.figure(figsize=(15,10))
-            low = df[df["Decision"] == variables['d_low']][feature]
-            high = df[df["Decision"] == variables['d_high']][feature]
-            plt.hist([low, high], 150, label=[variables['d_low'], variables['d_high']])
+            low = df[df["Decision"] == variables['class_1']][feature]
+            high = df[df["Decision"] == variables['class_2']][feature]
+            plt.hist([low, high], 150, label=[variables['class_1'], variables['class_2']])
             plt.title(df.columns[idx])
             plt.legend(loc='upper right')
             plt.show()

@@ -16,15 +16,4 @@ class RulesSetter(object):
         test_features_table['Decision'] = features_table.Decision
         test_features_table['Decision Fuzzy'] = ""
 
-        for index, row in test_features_table.iterrows():
-            new_dict = {}
-            for x in rules_feature_names:
-                new_dict[x] = row[x]
-
-            tipping.inputs(new_dict)
-            tipping.compute()
-            test_features_table.loc[index, 'Predicted Value'] = tipping.output['Decision']
-
-        sorted_decision = test_features_table.sort_values(by=['Predicted Value']).reset_index()
-
-        return sorted_decision
+        return test_features_table, rules_feature_names, tipping

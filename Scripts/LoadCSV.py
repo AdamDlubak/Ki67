@@ -14,7 +14,7 @@ from Functions.InconsistenciesRemover import InconsistenciesRemover as Inconsist
 class LoadCSV(object):
 
     def saveVariables(self, variables):
-        d_results = [variables["d_low"], variables["d_middle"], variables["d_high"]]
+        d_results = [variables["class_1"], variables["class_2"]]
         levels = [variables["low"], variables["middle"], variables["high"]]
 
         if not os.path.exists(variables["backup_folder"]):
@@ -38,7 +38,7 @@ class LoadCSV(object):
             csvExtractor = CSVExtractor(variables, fuzzifier)
             all_normalized_features_table, all_features_table = csvExtractor.worker()
             
-            pickle.dump(fuzzifier, open(variables["backup_folder"] + "fuzzifier.p", "wb"))
+            # pickle.dump(fuzzifier, open(variables["backup_folder"] + "fuzzifier.p", "wb"))
             pickle.dump(all_normalized_features_table, open(variables["backup_folder"] + "all_normalized_features_table.p", "wb"))
             pickle.dump(all_features_table, open(variables["backup_folder"] + "all_features_table.p", "wb"))
         
@@ -51,48 +51,35 @@ class LoadCSV(object):
 
         return train_normalized_features_table, test_normalized_features_table
 
-    def generateRules(self, fuzzifier, normalized_features_table, variables, d_results, sigma_mean_params = -1, fuzzifyFive = False):
+    def useRawSets(self, fuzzifier, normalized_features_table, variables, d_results, sigma_mean_params = -1, fuzzifyFive = False):
         features_table = normalized_features_table.copy()
         
         if fuzzifyFive:
             fuzzified_features_table, feature_labels, features, decision, fuzzify_parameters = fuzzifier.fuzzifyFive(features_table, sigma_mean_params)
         else:
             fuzzified_features_table, feature_labels, features, decision, fuzzify_parameters = fuzzifier.fuzzify(features_table, sigma_mean_params)
+        
+        pickle.dump(normalized_features_table, open(variables["backup_folder"] + "normalized_features_table.p", "wb"))
+        pickle.dump(decision, open(variables["backup_folder"] + "decision.p", "wb"))
         pickle.dump(fuzzify_parameters, open(variables["backup_folder"] + "fuzzify_parameters.p", "wb"))
+        pickle.dump(features_table, open(variables["backup_folder"] + "features_table.p", "wb"))
         pickle.dump(fuzzified_features_table, open(variables["backup_folder"] + "fuzzified_features_table.p", "wb"))
         pickle.dump(feature_labels, open(variables["backup_folder"] + "feature_labels.p", "wb"))
         pickle.dump(features, open(variables["backup_folder"] + "features.p", "wb"))
         
         inconsistencies_remover = InconsistenciesRemover(fuzzified_features_table, feature_labels, variables)
         decision_table = inconsistencies_remover.inconsistenciesRemoving()
-        pickle.dump(decision_table, open(variables["backup_folder"] + "decision_table.p", "wb"))
-        
         reductor = Reductor(decision_table, variables)
         decision_table_with_reduct = reductor.worker(decision_table)
+
+        pickle.dump(decision_table, open(variables["backup_folder"] + "decision_table.p", "wb"))
+        pickle.dump(reductor, open(variables["backup_folder"] + "reductor.p", "wb"))
         pickle.dump(decision_table_with_reduct, open(variables["backup_folder"] + "decision_table_with_reduct.p", "wb"))
 
-        rules_extractor = RulesExtractor(decision_table_with_reduct, reductor.reduct, variables)
-        rules, feature_names = rules_extractor.worker(decision_table_with_reduct, features, d_results, decision)
-        pickle.dump(rules, open(variables["backup_folder"] + "rules.p", "wb"))
-        pickle.dump(rules_extractor, open(variables["backup_folder"] + "rules_extractor.p", "wb"))
-        
-        if rules is None:
-            return None, feature_names, features_table 
-        else:
-            return rules, feature_names, features_table
-        
-    def setRules(self, rules, variables, features_table):
-        rulesSetter = RulesSetter()
-        sorted_decision = rulesSetter.setRules(rules, features_table)
-        pickle.dump(sorted_decision, open(variables["backup_folder"] + "sorted_decision.p", "wb"))
-        
-        return sorted_decision
 
     def workerCSV(self, variables, sigma_mean_params = -1):
         variables, d_results, levels = self.saveVariables(variables)
         fuzzifier, normalized_features_table = self.prepareData(variables, levels, d_results)
         normalized_features_table, test_normalized_features_table = self.splitDataForTrainingTest(normalized_features_table, variables)
-        rules, feature_names, features_table = self.generateRules(fuzzifier, normalized_features_table, variables, d_results, sigma_mean_params, variables['fuzzify_five'])
-        sorted_decision = self.setRules(rules, variables, normalized_features_table)
-
+        self.useRawSets(fuzzifier, normalized_features_table, variables, d_results, sigma_mean_params, variables['fuzzify_five'])
         print("Finished!")

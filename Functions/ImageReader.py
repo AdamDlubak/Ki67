@@ -16,9 +16,9 @@ class ImageReader(object):
             self.image_names.append(name.replace(variables["extension"], ''))
 
             if name.startswith("xx"):
-                self.image_decisions.append(variables["d_high"])  
+                self.image_decisions.append(variables["class_1"])  
             else:
-                self.image_decisions.append(variables["d_low"]) 
+                self.image_decisions.append(variables["class_2"]) 
 
     def printImage(self, image, title=""):
         fig = plt.figure()

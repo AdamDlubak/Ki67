@@ -1,6 +1,9 @@
 import os
 import numpy as np
 import pandas as pd
+from tqdm import tqdm
+import skfuzzy as fuzz
+from skfuzzy import control as ctrl
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import precision_recall_fscore_support as score
 
@@ -14,10 +17,10 @@ class OptimizeFunctions(object):
         if params[0] == -1:
             params[0] = np.mean(decision_table['Predicted Value'] )
         for index in decision_table.index:
-            if decision_table.loc[index]['Predicted Value'] >= params[0]:
-                decision_table.loc[index, 'Decision Fuzzy'] = variables['d_low']
-            elif decision_table.loc[index]['Predicted Value'] < params[0]:
-                decision_table.loc[index, 'Decision Fuzzy'] = variables['d_high']
+            if sorted_decision.loc[index]['Predicted Value'] > params[0]:
+                sorted_decision.loc[index, 'Decision Fuzzy'] = variables["class_1"]
+            else:
+                sorted_decision.loc[index, 'Decision Fuzzy'] = variables["class_2"]
         
         return decision_table
 
@@ -37,11 +40,37 @@ class OptimizeFunctions(object):
 
         return accuracy, precision, recall, fscore, support
 
-    def makeJob(self, params, sorted_decision, variables):
-        result_table = self.setDecisions(params, sorted_decision, variables)
-        accuracy = self.getAccuracy(result_table)
-        accuracy_reverse = 1 - accuracy
-        return accuracy_reverse
+    def makeJob(self, center_point, width, normalized_features_table, variables, x_range, rules_extractor, rule_antecedents, d_results, decision):
+        decision[variables["class_1"]] = fuzz.sigmf(x_range, center_point, -width)
+        decision[variables["class_2"]] = fuzz.sigmf(x_range, center_point, width)
+        decision.view()
+        rules = rules_extractor.generateRules(rule_antecedents, d_results, decision)
+        class_ctrl = ctrl.ControlSystem(rules)
+        gen = class_ctrl.fuzzy_variables
+        classing = ctrl.ControlSystemSimulation(class_ctrl)
+        rules_feature_names = []
+        for x in gen:
+            if str(x).startswith('Antecedent'):
+                rules_feature_names.append(str(x).split(': ')[1])
+        test_features_table = normalized_features_table[rules_feature_names].copy()
+        test_features_table['Decision'] = normalized_features_table.Decision
+        test_features_table['Decision Fuzzy'] = ""
+
+        for index, row in test_features_table.iterrows():
+            new_dict = {}
+            for x in rules_feature_names:
+                new_dict[x] = row[x]
+
+            classing.inputs(new_dict)
+            classing.compute()
+            test_features_table.loc[index, 'Predicted Value'] = classing.output['Decision']
+            if classing.output['Decision'] > center_point:
+                test_features_table.loc[index, 'Decision Fuzzy'] = variables["class_1"]
+            else:
+                test_features_table.loc[index, 'Decision Fuzzy'] = variables["class_2"]
+        
+        accuracy = self.getAccuracy(test_features_table)
+        return accuracy, test_features_table
 
     def optFunc(self, x, sorted_decision, variables):
         n_particles = x.shape[0]

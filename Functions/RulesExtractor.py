@@ -6,7 +6,7 @@ from skfuzzy import control as ctrl
 class RulesExtractor(object):
 
     def __init__(self, features_table, reduct, variables):
-        self.features_table = features_table
+        self.features_table = features_table.copy()
         self.reduct = reduct
         self.variables = variables
         self.algebra = boolean.BooleanAlgebra()
@@ -177,6 +177,7 @@ class RulesExtractor(object):
 
 
     def worker(self, decision_table, features, d_results, decision):
+        self.features_table = decision_table.copy()
         symetric_discernibility_matrix, features_table = self.generateSymetricDiscernibilityMatrix()
         if np.size(symetric_discernibility_matrix, 0) == 1:
             return None
@@ -186,7 +187,7 @@ class RulesExtractor(object):
         index_of_rules_table = self.getIndexOfRulesTable(decision_table)
         rule_implicants = self.modifyImplicantsForRules(implicants, decision_table, features)
         rule_antecedents = self.generateRuleAntecedents(index_of_rules_table, rule_implicants) 
-        rules = self.generateRules(rule_antecedents, d_results, decision)
+        # rules = self.generateRules(rule_antecedents, d_results, decision)
 
-        return rules, feature_names
+        return rule_antecedents, feature_names
     

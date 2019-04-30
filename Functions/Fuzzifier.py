@@ -23,13 +23,13 @@ class Fuzzifier(object):
             self.features[i].automf(names=self.levels)
 
         self.decision = ctrl.Consequent(self.x_range, 'Decision')
-        self.decision.automf(names=self.d_results)
+        # self.decision.automf(names=self.d_results)
+        # self.decision['negatif'] = fuzz.trimf(np.arange(self.variables["set_min"], self.variables["set_max"], self.variables["fuzzy_sets_precision"]), [0, 0, 0.2])
+        # self.decision['positif'] = fuzz.trimf(np.arange(self.variables["set_min"], self.variables["set_max"], self.variables["fuzzy_sets_precision"]), [0, 0.7, 1])
 
-    def gaussVeryLeft(self, x, mean, sigma):
+    def gaussMiddleLeft(self, x, mean, sigma):
         mean = mean * 0.5
-        y = np.zeros(len(x))
-        idx = x <= mean
-        y[idx] = fuzz.gaussmf(x[idx], mean, sigma)
+        y =  fuzz.gaussmf(x, mean, sigma)
         return y
 
     def gaussLeft(self, x, mean, sigma):
@@ -45,11 +45,9 @@ class Fuzzifier(object):
         y[idx] = 1 - fuzz.gaussmf(x[idx], mean, sigma)
         return y
 
-    def gaussVeryRight(self, x, mean, sigma):
+    def gaussMiddleRight(self, x, mean, sigma):
         mean = mean * 1.5
-        y = np.zeros(len(x))
-        idx = x >= mean
-        y[idx] = fuzz.gaussmf(x[idx], mean, sigma)
+        y = fuzz.gaussmf(x, mean, sigma)
         return y
 
 
@@ -68,16 +66,16 @@ class Fuzzifier(object):
 
         self.fuzzify_parameters.append(mean)
         self.fuzzify_parameters.append(sigma)
-        self.features[idx][self.variables["verylow"]] = self.gaussVeryLeft(self.x_range, mean, sigma)
         self.features[idx][self.variables["low"]] = self.gaussLeft(self.x_range, mean, sigma)
+        self.features[idx][self.variables["middlelow"]] = self.gaussMiddleLeft(self.x_range, mean, sigma)
         self.features[idx][self.variables["middle"]] = fuzz.gaussmf(self.x_range, mean, sigma)
+        self.features[idx][self.variables["middlehigh"]] = self.gaussMiddleRight(self.x_range, mean, sigma)
         self.features[idx][self.variables["high"]] = self.gaussRight(self.x_range, mean, sigma)
-        self.features[idx][self.variables["veryhigh"]] = self.gaussVeryRight(self.x_range, mean, sigma)
 
         for x in values:
             middle_value = fuzz.gaussmf(x, mean, sigma)
-            verylow_value = fuzz.gaussmf(x, mean * 0.5, sigma)
-            veryhigh_value = fuzz.gaussmf(x, mean * 1.5, sigma)
+            middlelow_value = fuzz.gaussmf(x, mean * 0.5, sigma)
+            middlehigh_value = fuzz.gaussmf(x, mean * 1.5, sigma)
             
             if x <= mean:
                 low_value = 1 - fuzz.gaussmf(x, mean, sigma)
@@ -89,17 +87,17 @@ class Fuzzifier(object):
             else:
                 high_value = 0
 
-            max_value = max([verylow_value, low_value, middle_value, high_value, veryhigh_value])
-            if max_value == verylow_value:
-                return_value = self.features[idx][self.variables["verylow"]].label    
+            max_value = max([middlelow_value, low_value, middle_value, high_value, middlehigh_value])
+            if max_value == middlelow_value:
+                return_value = self.features[idx][self.variables["middlelow"]].label    
             elif max_value == low_value:
                  return_value = self.features[idx][self.variables["low"]].label                   
             elif max_value == middle_value:
                  return_value = self.features[idx][self.variables["middle"]].label  
             elif max_value == high_value:
                  return_value = self.features[idx][self.variables["high"]].label  
-            elif max_value == veryhigh_value:
-                 return_value = self.features[idx][self.variables["veryhigh"]].label                                                     
+            elif max_value == middlehigh_value:
+                 return_value = self.features[idx][self.variables["middlehigh"]].label                                                     
             
             return_array.append(return_value)
 

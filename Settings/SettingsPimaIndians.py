@@ -10,11 +10,11 @@ variables = {
     "d_middle": "",
     "d_high": "positif",
     
-    "verylow": "Very Low",
+    "middlelow": "Middle Low",
     "low": "Low",
     "middle": "Middle",
     "high": "High",
-    "veryhigh": "Very High",
+    "middlehigh": "Middle High",
     
     "feature_numbers": 8,
     "set_min": 0,
