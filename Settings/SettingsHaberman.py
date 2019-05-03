@@ -13,7 +13,7 @@ variables = {
     "middlehigh": "Middle High",
     "high": "High",
     
-    "feature_numbers": 4,
+    "feature_numbers": 3,
     "set_min": 0,
     "set_max": 1,
     "fuzzy_sets_precision": 0.01,
