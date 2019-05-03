@@ -1,20 +1,17 @@
-import numpy as np
-
 variables = {
     "data_folder": "../Data/Pima Indians.csv",
-    "backup_folder": "1. Data - Pima Indians/",
-    "results_folder": "1. Results - Pima Indians/",
-    "extension": ".jpeg",
+    "backup_folder": "Pickle/Pima Indians/",
+    "results_folder": "Results/",
+    "results_file": "Pima Indians.csv",
+
+    "class_1": "negatif",
+    "class_2": "positif",
     
-    "d_low": "negatif",
-    "d_middle": "",
-    "d_high": "positif",
-    
-    "middlelow": "Middle Low",
     "low": "Low",
+    "middlelow": "Middle Low",
     "middle": "Middle",
-    "high": "High",
     "middlehigh": "Middle High",
+    "high": "High",
     
     "feature_numbers": 8,
     "set_min": 0,
@@ -23,19 +20,10 @@ variables = {
     "show_results": False,
     "load_previous_data": False,
 
-    "pairplot_data_file": "all_features_table",
     "fuzzify_five": False
 }
 
-constraints = ((0, 1, 0.01),)
+constraints = (slice(0, 1, 0.05), )
+s_function_width = 5
 sigma_mean_params = -1
 n_folds = 10
-
-swarm_size = 20
-dim = 1
-epsilon = 1.0
-iters = 20
-options = {'c1': 0.5, 'c2': 0.3, 'w': 0.9}
-borders = (np.array([0]), np.array([1]))
-
-threshold_value = -1 
