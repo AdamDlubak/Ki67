@@ -4,8 +4,8 @@ variables = {
     "results_folder": "Results/",
     "results_file": "Immunotherapy.csv",
 
-    "class_1": "One",
-    "class_2": "Zero",
+    "class_1": "Zero",
+    "class_2": "One",
     
     "low": "Low",
     "middlelow": "Middle Low",
@@ -26,4 +26,4 @@ variables = {
 constraints = (slice(0, 1, 0.05), )
 s_function_width = 5
 sigma_mean_params = -1
-n_folds = 10
+n_folds = 5

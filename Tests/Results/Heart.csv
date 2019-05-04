@@ -1,0 +1,4 @@
+Type,Accuracy,Precision A,Precision B,Recall A,Recall B,F-Score A,F-Score B,Support A,Support B,S-Functions Center,S-Functions Width,Threshold,Time (s)
+Train: BruteForce S-Functions K-Fold 0,0.56,0.56,0.0,1.0,0.0,0.717948717948718,0.0,14,11,0.0,5,---,213.94923734664917
+Train: BruteForce S-Functions K-Fold 1,0.56,0.56,0.0,1.0,0.0,0.717948717948718,0.0,14,11,0.0,5,---,214.38926243782043
+Train: BruteForce S-Functions K-Fold 2,0.56,0.56,0.0,1.0,0.0,0.717948717948718,0.0,14,11,0.0,5,---,214.7552833557129

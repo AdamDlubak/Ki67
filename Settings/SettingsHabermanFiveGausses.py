@@ -4,8 +4,8 @@ variables = {
     "results_folder": "Results/",
     "results_file": "Haberman - 5 Gausses.csv",
 
-    "class_1": "One",
-    "class_2": "Zero",
+    "class_1": "Zero",
+    "class_2": "One",
     
     "low": "Low",
     "middlelow": "Middle Low",

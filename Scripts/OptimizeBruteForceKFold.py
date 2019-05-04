@@ -53,7 +53,9 @@ class OptimizeBruteForceKFold(object):
             s_function_center = optimization_result[0][0]
             _, df = self.fuzzyHelper.sFunctionsValue(s_function_center, s_function_width, test_data, variables, self.x_range, self.rules_extractor, self.rule_antecedents, self.d_results, self.decision)
             test_accuracy, test_precision, test_recall, test_fscore, test_support = self.fuzzyHelper.getScores(df, False)
-            
+            if idx == 0:
+                display(df.sort_values(by=["Predicted Value"]).head(10))
+                display(df.sort_values(by=["Predicted Value"]).tail(10))
             s_function_centers.append(s_function_center)
             if test_accuracy > best_accuracy_score:
                 best_s_function_center = s_function_center

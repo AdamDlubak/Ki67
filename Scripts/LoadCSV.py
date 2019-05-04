@@ -31,7 +31,7 @@ class LoadCSV(object):
         return features_df
 
     def splitDataForTrainingTest(self, features_df, variables, test_size = 0.2):
-        train_features_df, test_features_df = train_test_split(features_df, test_size=test_size)
+        train_features_df, test_features_df = train_test_split(features_df, test_size=test_size, stratify=features_df.Decision)
         pickle.dump(train_features_df, open(variables["backup_folder"] + "train_features_df.p", "wb"))
         pickle.dump(test_features_df, open(variables["backup_folder"] + "test_features_df.p", "wb"))
 
