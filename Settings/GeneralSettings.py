@@ -1,4 +1,4 @@
-gausses = 5
+gausses = 11
 
 data_folder = "../Data/"
 backup_folder = "Pickle/"
