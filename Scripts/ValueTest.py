@@ -10,11 +10,15 @@ class ValueTest(object):
 
     def __init__(self, variables, s_function_width, is_train_df = True, s_function_center = 0.5, threshold = -1):
         self.path = variables['backup_folder']
+        self.variables = variables
         self.d_results = [variables["class_1"], variables["class_2"]]
         self.x_range = np.arange(variables["set_min"], variables["set_max"], variables["fuzzy_sets_precision"])
         self.s_function_width = s_function_width
         self.fuzzyHelper = FuzzyHelper(variables)
         self.loadData(variables, is_train_df)
+
+    def highlightClassOne(self, row):
+        return ['background-color: green' if self.variables["class_1"] == x else "" for x in row]
 
     def loadData(self, variables, is_train_df):
         self.decision = pickle.load(open(self.path + "decision.p", "rb"))
@@ -43,6 +47,11 @@ class ValueTest(object):
         print("Time: {}".format(measured_time))
         print("-----------------------------------------------------------------------------------")
 
+        df = df.sort_values(by=["Predicted Value"])
+        display(df.style.apply(self.highlightClassOne, axis = 1))
+        pickle.dump(df, open(variables["backup_folder"] + self.data_type + "_df_results.p", "wb"))
+
+
         self.fuzzyHelper.saveResults(variables['results_folder'] + variables["results_file"], [self.data_type + ": " + title, accuracy, precision[0], precision[1], recall[0], recall[1], fscore[0], fscore[1], support[0], support[1], s_function_center, self.s_function_width, "---", measured_time])
 
     def noOptymalizationWorker(self, variables):
@@ -65,6 +74,9 @@ class ValueTest(object):
         print(self.data_type + " Accuracy: {}".format(accuracy))
         print("Time: {}".format(measured_time))
         print("-----------------------------------------------------------------------------------")
+
+        display(df.sort_values(by=["Predicted Value"]))
+        pickle.dump(df, open(variables["backup_folder"] + self.data_type + "_df_results.p", "wb"))
 
         self.fuzzyHelper.saveResults(variables['results_folder'] + variables["results_file"], [self.data_type + ": " + "Threshold Optymalization", accuracy, precision[0], precision[1], recall[0], recall[1], fscore[0], fscore[1], support[0], support[1], s_function_center, self.s_function_width, threshold, measured_time])
 

@@ -49,94 +49,93 @@ class FeatureExtractor(object):
     def  extractFeaturesFromImage(self, image, image_decision, image_name):
         
         idx = 0
-        self.decision_table = pd.DataFrame({self.fuzzifier.features[idx].label: ""})
-
+        self.decision_table = pd.DataFrame({self.fuzzifier.features[idx].label: [""]})
         results = self.prepareImage(image, "r")
         self.decision_table[self.fuzzifier.features[idx].label] = self.thresholdImage(results)
         idx += 1
 
-        results = self.prepareImage(image, "r-std")
-        self.decision_table[self.fuzzifier.features[idx].label] = self.thresholdImageSTD(results)
-        idx += 1
+        # results = self.prepareImage(image, "r-std")
+        # self.decision_table[self.fuzzifier.features[idx].label] = self.thresholdImageSTD(results)
+        # idx += 1
 
         results = self.prepareImage(image, "g")
         self.decision_table[self.fuzzifier.features[idx].label] = self.thresholdImage(results)
         idx += 1
 
-        results = self.prepareImage(image, "g-std")
-        self.decision_table[self.fuzzifier.features[idx].label] = self.thresholdImageSTD(results)
-        idx += 1
+        # results = self.prepareImage(image, "g-std")
+        # self.decision_table[self.fuzzifier.features[idx].label] = self.thresholdImageSTD(results)
+        # idx += 1
 
         results = self.prepareImage(image, "b")
         self.decision_table[self.fuzzifier.features[idx].label] = self.thresholdImage(results)
         idx += 1
 
-        results = self.prepareImage(image, "b-std")
-        self.decision_table[self.fuzzifier.features[idx].label] = self.thresholdImageSTD(results)
-        idx += 1
+        # results = self.prepareImage(image, "b-std")
+        # self.decision_table[self.fuzzifier.features[idx].label] = self.thresholdImageSTD(results)
+        # idx += 1
 
         results = self.prepareImage(image, "s")
         self.decision_table[self.fuzzifier.features[idx].label] = self.thresholdImage(results)
         idx += 1
 
-        results = self.prepareImage(image, "s-std")
-        self.decision_table[self.fuzzifier.features[idx].label] = self.thresholdImageSTD(results)
-        idx += 1
+        # results = self.prepareImage(image, "s-std")
+        # self.decision_table[self.fuzzifier.features[idx].label] = self.thresholdImageSTD(results)
+        # idx += 1
 
         results = self.prepareImage(image, "h")
         self.decision_table[self.fuzzifier.features[idx].label] = self.thresholdImage(results)
         idx += 1
 
-        results = self.prepareImage(image, "h-std")
-        self.decision_table[self.fuzzifier.features[idx].label] = self.thresholdImageSTD(results)
-        idx += 1
+        # results = self.prepareImage(image, "h-std")
+        # self.decision_table[self.fuzzifier.features[idx].label] = self.thresholdImageSTD(results)
+        # idx += 1
 
         results = self.prepareImage(image, "v")
         self.decision_table[self.fuzzifier.features[idx].label] = self.thresholdImage(results)
         idx += 1
 
-        results = self.prepareImage(image, "v-std")
-        self.decision_table[self.fuzzifier.features[idx].label] = self.thresholdImageSTD(results)
-        idx += 1
+        # results = self.prepareImage(image, "v-std")
+        # self.decision_table[self.fuzzifier.features[idx].label] = self.thresholdImageSTD(results)
+        # idx += 1
 
         results = self.prepareImage(image, "intensity-mean")
         self.decision_table[self.fuzzifier.features[idx].label] = self.thresholdImage(results)
         idx += 1
 
-        results = self.prepareImage(image, "exred-mean")
-        self.decision_table[self.fuzzifier.features[idx].label] = self.thresholdImage(results)
-        idx += 1
+        # results = self.prepareImage(image, "exred-mean")
+        # self.decision_table[self.fuzzifier.features[idx].label] = self.thresholdImage(results)
+        # idx += 1
 
-        results = self.prepareImage(image, "exblue-mean")
-        self.decision_table[self.fuzzifier.features[idx].label] = self.thresholdImage(results)
+        # results = self.prepareImage(image, "exblue-mean")
+        # self.decision_table[self.fuzzifier.features[idx].label] = self.thresholdImage(results)
 
-        results = self.prepareImage(image, "exgreen-mean")
-        self.decision_table[self.fuzzifier.features[idx].label] = self.thresholdImage(results)
-        idx += 1
+        # results = self.prepareImage(image, "exgreen-mean")
+        # self.decision_table[self.fuzzifier.features[idx].label] = self.thresholdImage(results)
+        # idx += 1
 
-        results = self.prepareImage(image, "region-centroid-col")
-        self.decision_table[self.fuzzifier.features[idx].label] = self.thresholdImage(results)
-        idx += 1
+        # results = self.prepareImage(image, "region-centroid-col")
+        # self.decision_table[self.fuzzifier.features[idx].label] = self.thresholdImage(results)
+        # idx += 1
 
-        results = self.prepareImage(image, "region-centroid-row")
-        self.decision_table[self.fuzzifier.features[idx].label] = self.thresholdImage(results)
-        idx += 1
+        # results = self.prepareImage(image, "region-centroid-row")
+        # self.decision_table[self.fuzzifier.features[idx].label] = self.thresholdImage(results)
+        # idx += 1
 
-        results = self.prepareImage(image, "aspect-ratio")
-        self.decision_table[self.fuzzifier.features[idx].label] = results
-        idx += 1
+        # results = self.prepareImage(image, "aspect-ratio")
+        # self.decision_table[self.fuzzifier.features[idx].label] = results
+        # idx += 1
 
-        results = self.prepareImage(image, "extent")
-        self.decision_table[self.fuzzifier.features[idx].label] = results
-        idx += 1
+        # results = self.prepareImage(image, "extent")
+        # self.decision_table[self.fuzzifier.features[idx].label] = results
+        # idx += 1
 
-        results = self.prepareImage(image, "solidity")
-        self.decision_table[self.fuzzifier.features[idx].label] = results
-        idx += 1
+        # results = self.prepareImage(image, "solidity")
+        # self.decision_table[self.fuzzifier.features[idx].label] = results
+        # idx += 1
 
-        results = self.prepareImage(image, "equi-diamter")
-        self.decision_table[self.fuzzifier.features[idx].label] = results
-        idx += 1
+        # results = self.prepareImage(image, "equi-diamter")
+        # self.decision_table[self.fuzzifier.features[idx].label] = results
+        # idx += 1
 
         image_column = np.full(self.decision_table.shape[0], image_name)
         self.decision_table['Image'] = image_column
@@ -152,10 +151,11 @@ class FeatureExtractor(object):
         features_array = []
         thresholded_images = []
         self.features_table = pd.DataFrame()
-
-        for idx, image in tqdm(enumerate(image_reader.images)):
-            features_array.append(
-                self.extractFeaturesFromImage(image, image_reader.image_decisions[idx], image_reader.image_names[idx]))
+        for idx, image in enumerate(image_reader.images):
+            for pixels_row in tqdm(image):
+                for pixel in pixels_row:
+                    if pixel.all() != 0:
+                        features_array.append(self.extractFeaturesFromImage(image, image_reader.image_decisions[idx], image_reader.image_names[idx]))
         self.features_table = pd.concat(features_array).reset_index(drop=True)
 
         self.showResults(self.features_table)
@@ -170,17 +170,17 @@ class FeatureExtractor(object):
         h, s, v = cv2.split(hsv_image)
         return h, s, v
 
-    def prepareImage(self, image, image_type, width=224, height=224):
+    def prepareImage(self, resized_image, image_type, width=224, height=224):
 
-        resized_image = cv2.resize(image, (width, height)) 
+        # resized_image = cv2.resize(image, (width, height)) 
 
         r_image, g_image, b_image = self.splitIntoRgbChannels(resized_image)
         h_image, s_image, v_image = self.splitIntoHsvChannels(resized_image)
 
-        imgray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-        ret, thresh = cv2.threshold(imgray, 40, 255, 0)
-        contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-        cnt = max(contours, key = cv2.contourArea)
+        imgray = cv2.cvtColor(resized_image, cv2.COLOR_BGR2GRAY)
+        ret, thresh = cv2.threshold(imgray, 5, 255, 0)
+        # contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+        # cnt = max(contours, key = cv2.contourArea)
 
         if image_type == "r" or image_type == "r-std":
             color_image = r_image

@@ -57,13 +57,14 @@ class Reductor(object):
     def introduceReduct(self, decision_table):
         decision_table_after_reduct = decision_table[
             decision_table.columns[self.reduct]].copy()
+        features_number_after_reduct = len(decision_table_after_reduct.columns.values)
         decision_table_after_reduct['Decision'] = decision_table['Decision'].copy()
         decision_table_after_reduct = decision_table_after_reduct.reset_index(drop=True)
 
         if self.variables["show_results"]:
             display(decision_table_after_reduct)
 
-        return decision_table_after_reduct
+        return decision_table_after_reduct, features_number_after_reduct
 
     def worker(self, decision_table):
         self.getReduct()

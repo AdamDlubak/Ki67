@@ -15,7 +15,6 @@ class RulesExtractor(object):
     def generateSymetricDiscernibilityMatrix(self):
 
         self.features_table = self.features_table.drop(['Decision'], axis=1)
-
         symetric_discernibility_matrix = np.zeros((len(self.features_table),
                                                 len(self.features_table),
                                                 len(self.reduct)))

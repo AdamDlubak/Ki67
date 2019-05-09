@@ -2,10 +2,9 @@ import pandas as pd
 
 class CSVExtractor(object):
     
-    def __init__(self, variables, fuzzifier):
+    def __init__(self, variables):
         self.path = variables['data_folder']
         self.variables = variables
-        self.fuzzifier = fuzzifier
 
     def showResults(self, df):
         if self.variables["show_results"]:
@@ -19,8 +18,8 @@ class CSVExtractor(object):
 
         return features_df
 
-    def normalizeFeatures(self, features_df):
-        for x in self.fuzzifier.features:
+    def normalizeFeatures(self, features_df, fuzzifier):
+        for x in fuzzifier.features:
             features_df[x.label] = (
                 features_df[x.label] - features_df[x.label].min()) / (
                     features_df[x.label].max() - features_df[x.label].min())
@@ -29,7 +28,7 @@ class CSVExtractor(object):
 
         return features_df
 
-    def worker(self):
+    def worker(self, fuzzifier):
         features_df = self.extractFeatures()
-        normalized_features_df = self.normalizeFeatures(features_df)
+        normalized_features_df = self.normalizeFeatures(features_df, fuzzifier)
         return normalized_features_df

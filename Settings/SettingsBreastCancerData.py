@@ -1,29 +1,43 @@
+import Settings.GeneralSettings as generalSettings
+
+dataset = "Breast Cancer Data"
+class_1 = "One"
+class_2 = "Zero"
+
 variables = {
-    "data_folder": "../Data/Breast Cancer Data.csv",
-    "backup_folder": "Pickle/Breast Cancer Data/",
-    "results_folder": "Results/",
-    "results_file": "Breast Cancer Data.csv",
-    
-    "class_1": "One",
-    "class_2": "Zero",
-    
-    "low": "Low",
-    "middlelow": "Middle Low",
-    "middle": "Middle",
-    "middlehigh": "Middle High",
-    "high": "High",
+    "dataset_name": dataset,
+    "data_folder": generalSettings.data_folder + dataset + ".csv",
+    "backup_folder": generalSettings.backup_folder + dataset + "/" + str(generalSettings.gausses) + " Gausses/",
+    "results_folder": generalSettings.results_folder,
+    "results_file": dataset + " - " + str(generalSettings.gausses) + " Gausses.csv",
+
+    "class_1": class_1,
+    "class_2": class_2,
     
     "feature_numbers": 5,
+    "gausses": generalSettings.gausses,
+
+
     "set_min": 0,
     "set_max": 1,
     "fuzzy_sets_precision": 0.01,
     "show_results": False,
     "load_previous_data": False,
 
-    "fuzzify_five": False
+    "verylow": "Very low",
+    "low": "Low",
+    "middlelowminus": "Middle Low -",
+    "middlelow": "Middle Low",
+    "middlelowplus": "Middle Low +",
+    "middle": "Middle",
+    "middlehighminus": "Middle High -",
+    "middlehigh": "Middle High",
+    "middlehighplus": "Middle High +",
+    "high": "High",
+    "veryhigh": "Very High",
 }
 
 constraints = (slice(0, 1, 0.05), )
-s_function_width = 5
-sigma_mean_params = -1
+s_function_width = generalSettings.s_function_width
+sigma_mean_params = generalSettings.sigma_mean_params
 n_folds = 10

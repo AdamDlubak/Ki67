@@ -1,5 +1,7 @@
 import cv2
 import pickle
+import numpy as np
+import pandas as pd
 import seaborn as sns
 from matplotlib import pyplot as plt
 
@@ -45,3 +47,53 @@ class Helper(object):
         plt.savefig('foo.png')
 
         plt.show()
+
+    def loadFuzzificationStats(self):
+        df = pickle.load(open("Summaries/Fuzzification Statistics.p", "rb"))
+        display(df)
+        return df
+
+    def loadFuzzificationParameters(self):
+        df = pickle.load(open("Summaries/Fuzzification Parameters.p", "rb"))
+        display(df)
+        return df
+
+
+    def saveFuzzificationStats(self, data):
+        columns = ["Dataset", "Gausses","Samples", "Train s.", "Test s.", "Changed s.", "% changed s.", "Implicants", "Features", "F. after reduct"
+]
+        try:
+            df = pickle.load(open("Summaries/Fuzzification Statistics.p", "rb"))
+        except (OSError, IOError):
+            df = pd.DataFrame(columns = columns)
+        
+        df = df[(df[columns[0]] != data[0]) | (df[columns[1]] != data[1])]
+        row = pd.DataFrame([data], columns = columns)
+        df = df.append(row)
+        df = df.sort_values(by=["Dataset", "Gausses"]).reset_index(drop=True)
+        display(df)
+        pickle.dump(df, open("Summaries/Fuzzification Statistics.p", "wb"))
+
+    def saveFuzzificationParameters(self, data):
+        begin_data = data[0:3]
+        rest_data = [round(x, 3) for x in data[3:]]
+        data = begin_data + rest_data
+        columns = ["Dataset", "Gausses", "Auto Mode", "Mean 0", "Std 0", "Mean 1", "Std 1", "Mean 2", "Std 2", "Mean 3", "Std 3", "Mean 4", "Std 4", "Mean 5", "Std 5", "Mean 6", "Std 6", "Mean 7", "Std 7", "Mean 8", "Std 8", "Mean 9", "Std 9", "Mean 10", "Std 10", "Mean 11", "Std 11", "Mean 12", "Std 12", "Mean 13", "Std 13", "Mean 14", "Std 14", "Mean 15", "Std 15"]
+        complement = np.empty(len(columns) - len(data), dtype=str)
+        data = np.concatenate((data, complement), axis=0)
+        if data[2] == "-1":
+            data[2] = "True"
+        else:
+            data[2] = "False"
+                
+        try:
+            df = pickle.load(open("Summaries/Fuzzification Parameters.p", "rb"))
+        except (OSError, IOError):
+            df = pd.DataFrame(columns = columns)
+        
+        df = df[(df[columns[0]] != data[0]) | (df[columns[1]] != data[1]) | (df[columns[2]] != data[2])]
+        row = pd.DataFrame([data], columns = columns)
+        df = df.append(row)
+        df = df.sort_values(by=["Dataset", "Gausses"]).reset_index(drop=True)
+        display(df)
+        pickle.dump(df, open("Summaries/Fuzzification Parameters.p", "wb"))

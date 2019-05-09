@@ -9,16 +9,17 @@ class ImageReader(object):
         self.image_names = []
         self.image_decisions = []
 
-    def loadImages(self, Decision, variables):
+    def loadImages(self, variables):
         for name in listdir(self.path):
-            file_path = self.path  + name
+            file_path = self.path + "/" + name
             self.images.append(cv2.imread(file_path))
             self.image_names.append(name.replace(variables["extension"], ''))
 
-            if name.startswith("xx"):
-                self.image_decisions.append(variables["class_1"])  
-            else:
-                self.image_decisions.append(variables["class_2"]) 
+            # if name.startswith("background"):
+                # self.image_decisions.append(variables["class_1"])  
+            # else:
+                # self.image_decisions.append(variables["class_2"]) 
+            self.image_decisions.append(name[:-4]) 
 
     def printImage(self, image, title=""):
         fig = plt.figure()

@@ -6,6 +6,7 @@ class InconsistenciesRemover(object):
         self.features_table = features_table
         self.feature_labels = feature_labels
         self.variables = variables
+        self.changed_decisions = 0
 
     def getOccurenceOfRows(self, df, remove_columns):
         if remove_columns:
@@ -65,7 +66,7 @@ class InconsistenciesRemover(object):
 
 
     def solveConflicts(self, number_of_conflicts_decision, problems_to_solve,
-                        features_decisions_occurence, number_of_clear_decision):
+                        features_decisions_occurence, number_of_clear_decision, general_features_occurence):
 
         for _, row in number_of_conflicts_decision.iterrows():
             new_df = pd.DataFrame(columns={"Decision", "Probability"})
@@ -88,11 +89,19 @@ class InconsistenciesRemover(object):
                                         ignore_index=True)
 
             new_value = new_df.loc[new_df['Probability'].idxmax()]['Decision'][0]
-
             for idx, row_decision_table in features_decisions_occurence.iterrows():
-                if (row[self.feature_labels].values ==
-                        row_decision_table[self.feature_labels]).all():
-                    features_decisions_occurence.loc[idx, 'Decision'] = new_value
+                if (row[self.feature_labels].values == row_decision_table[self.feature_labels]).all():
+                        if features_decisions_occurence.loc[features_decisions_occurence.index == idx].Decision.values[0] != new_value:
+                            if self.variables["show_results"]:
+                                print("Current value: {}".format(features_decisions_occurence.loc[features_decisions_occurence.index == idx].Decision.values[0]))
+                                print("New value: {}".format(new_value))
+                            for idy, row_general_occurence in general_features_occurence.iterrows():
+                                if (row_general_occurence[self.feature_labels].values == row_decision_table[self.feature_labels]).all():
+                                    if self.variables["show_results"]:
+                                        print(row_general_occurence.Occurence)
+                                    self.changed_decisions = self.changed_decisions + row_general_occurence.Occurence
+                                    break
+                            features_decisions_occurence.loc[idx, 'Decision'] = new_value
 
         return features_decisions_occurence
 
@@ -101,15 +110,18 @@ class InconsistenciesRemover(object):
         features_decisions_occurence = self.getOccurenceOfRows(
             self.features_table, ['Image'])
         
+        general_features_occurence = features_decisions_occurence.copy()
+        self.samples = features_decisions_occurence.Occurence.sum()
+
         if self.variables["show_results"]:
             display(features_decisions_occurence)
-
-
         features_occurence = self.getOccurenceOfRows(self.features_table,
                                                 ['Image', 'Decision'])
 
+
         if self.variables["show_results"]:
-            display(features_decisions_occurence)
+            display(features_occurence)
+
 
         features_occurence = self.getOccurenceOfRows(self.features_table,
                                                 ['Decision'])
@@ -140,7 +152,7 @@ class InconsistenciesRemover(object):
 
         features_decisions_occurence = self.solveConflicts(
             number_of_conflicts_decision, problems_to_solve,
-            features_decisions_occurence, number_of_clear_decision)
+            features_decisions_occurence, number_of_clear_decision, general_features_occurence)
         decision_table = features_decisions_occurence.drop(['Occurence'],
                                                         axis=1).drop_duplicates(
                                                             keep='first',
@@ -149,4 +161,4 @@ class InconsistenciesRemover(object):
             print("Tablica decyzyjna po usunięciu duplikatów i niespójności")
             display(decision_table)
 
-        return decision_table
+        return decision_table, self.changed_decisions

@@ -8,34 +8,56 @@ from Class.CSVExtractor import CSVExtractor as CSVExtractor
 
 class LoadCSV(object):
 
-    def saveVariables(self, variables):
-        d_results = [variables["class_1"], variables["class_2"]]
-        if not os.path.exists(variables["backup_folder"]):
-            os.makedirs(variables["backup_folder"])
-        if not os.path.exists(variables["results_folder"]):
-            os.makedirs(variables["results_folder"])   
+    def __init__(self):
+        self.variables = []
+        
+    def savVariables(self):
+        d_results = [self.variables["class_1"], self.variables["class_2"]]
+        if not os.path.exists(self.variables["backup_folder"]):
+            os.makedirs(self.variables["backup_folder"])
+        if not os.path.exists(self.variables["results_folder"]):
+            os.makedirs(self.variables["results_folder"])   
 
-        return variables, d_results
+        return d_results
 
-    def prepareData(self, variables, d_results):
-        if variables['load_previous_data']:
-            fuzzifier = pickle.load(open(variables["backup_folder"] + "fuzzifier.p", "rb"))
-            features_df = pickle.load(open(variables["backup_folder"] + "features_df.p", "rb"))
+    def prepareData(self, d_results):
+        fuzzifier = Fuzzifier(self.variables, d_results)
+        if self.variables['load_previous_data']:
+            features_df = pickle.load(open(self.variables["backup_folder"] + "features_df.p", "rb"))
         else:
-            fuzzifier = Fuzzifier(variables, d_results)
-            csvExtractor = CSVExtractor(variables, fuzzifier)
-            features_df = csvExtractor.worker()      
-            pickle.dump(fuzzifier, open(variables["backup_folder"] + "fuzzifier.p", "wb"))
-            pickle.dump(features_df, open(variables["backup_folder"] + "features_df.p", "wb"))
+            csvExtractor = CSVExtractor(self.variables)
+            features_df = csvExtractor.worker(fuzzifier)   
+    
+        pickle.dump(fuzzifier, open(self.variables["backup_folder"] + "fuzzifier.p", "wb"))
+        pickle.dump(features_df, open(self.variables["backup_folder"] + "features_df.p", "wb"))
         
         return features_df
 
-    def splitDataForTrainingTest(self, features_df, variables, test_size = 0.2):
+    def splitDataForTrainingTest(self, features_df, test_size = 0.2):
         train_features_df, test_features_df = train_test_split(features_df, test_size=test_size, stratify=features_df.Decision)
-        pickle.dump(train_features_df, open(variables["backup_folder"] + "train_features_df.p", "wb"))
-        pickle.dump(test_features_df, open(variables["backup_folder"] + "test_features_df.p", "wb"))
+        pickle.dump(train_features_df, open(self.variables["backup_folder"] + "train_features_df.p", "wb"))
+        pickle.dump(test_features_df, open(self.variables["backup_folder"] + "test_features_df.p", "wb"))
+
+
+        class_1_features_occurence = features_df.loc[features_df.Decision == self.variables["class_1"]]["Decision"].count()
+        class_2_features_occurence = features_df.loc[features_df.Decision == self.variables["class_2"]]["Decision"].count()
+
+        class_1_train_occurence = train_features_df.loc[train_features_df.Decision == self.variables["class_1"]]["Decision"].count()
+        class_2_train_occurence = train_features_df.loc[train_features_df.Decision == self.variables["class_2"]]["Decision"].count()
+
+        class_1_test_occurence = test_features_df.loc[test_features_df.Decision == self.variables["class_1"]]["Decision"].count()
+        class_2_test_occurence = test_features_df.loc[test_features_df.Decision == self.variables["class_2"]]["Decision"].count()
+
+        features_result = "{} ({}/{})".format(features_df.shape[0], class_1_features_occurence, class_2_features_occurence)
+        train_result = "{} ({}/{})".format(train_features_df.shape[0], class_1_train_occurence, class_2_train_occurence)
+        test_result = "{} ({}/{})".format(test_features_df.shape[0], class_1_test_occurence, class_2_test_occurence)
+        return features_result, train_result, test_result, train_features_df.shape[0]
 
     def worker(self, variables):
-        variables, d_results = self.saveVariables(variables)
-        features_df = self.prepareData(variables, d_results)
-        self.splitDataForTrainingTest(features_df, variables)
+        self.variables= variables
+
+        d_results = self.savVariables()
+        features_df = self.prepareData(d_results)
+        samples_stats, train_stats, test_stats, train_samples = self.splitDataForTrainingTest(features_df)
+
+        return samples_stats, train_stats, test_stats, train_samples
