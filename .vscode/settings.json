@@ -1,4 +1,19 @@
 {
     "python.linting.pylintEnabled": true,
-    "python.pythonPath": "C:\\Programy\\Anaconda\\envs\\py35\\python.exe"
+    "python.pythonPath": "C:\\Programy\\Anaconda\\envs\\py35\\python.exe",
+    "window.zoomLevel": 0,
+    "terminal.integrated.shell.windows": "C:\\WINDOWS\\System32\\cmd.exe",
+    "editor.suggestSelection": "first",
+    "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
+    "python.jediEnabled": false,
+    "editor.minimap.enabled": false,
+    "files.exclude": {
+        "**/.git": true,        
+        "**/.DS_Store": true,  
+        "**/node_modules": true,        
+        "**/__pycache__": true,
+        "**/.vscode": true,
+        "**/.ipynb_checkpoints": true,
+        "**/.gitignore": true,
+    }
 }
