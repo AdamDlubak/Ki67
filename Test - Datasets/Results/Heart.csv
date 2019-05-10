@@ -1,0 +1,4 @@
+Test type,Dataset,Gausses,Data Type,Operation,Accuracy,Precision A,Precision B,Recall A,Recall B,F-Score A,F-Score B,Support A,Support B,S-Functions Center,S-Functions Width,Threshold,Time (s),Test date
+Gauss functions,Heart,11,Train,No Optymalization,0.45454545454545453,0.0,0.45454545454545453,0.0,1.0,0.0,0.625,132,110,0.5,5,---,68.24428129196167,2019-05-10 01:44:15.759646
+Gauss functions,Heart,11,Train,BruteForce S-Functions,0.5454545454545454,0.5454545454545454,0.0,1.0,0.0,0.7058823529411764,0.0,132,110,0.0,5,---,911.210999250412,2019-05-10 02:01:34.826304
+Gauss functions,Heart,11,Train,BruteForce Threshold,0.5454545454545454,0.5454545454545454,0.0,1.0,0.0,0.7058823529411764,0.0,132,110,0.0,5,0.4988631094019286,32.02099943161011,2019-05-10 02:02:07.064304

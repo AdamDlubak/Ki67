@@ -1,0 +1,4 @@
+Test type,Dataset,Gausses,Data Type,Operation,Accuracy,Precision A,Precision B,Recall A,Recall B,F-Score A,F-Score B,Support A,Support B,S-Functions Center,S-Functions Width,Threshold,Time (s),Test date
+Gauss functions,Immunotherapy,11,Train,No Optymalization,0.7916666666666666,0.7916666666666666,0.0,1.0,0.0,0.8837209302325582,0.0,57,15,0.5,5,---,3.176067352294922,2019-05-10 01:41:59.336466
+Gauss functions,Immunotherapy,11,Train,BruteForce S-Functions,0.7916666666666666,0.7916666666666666,0.0,1.0,0.0,0.8837209302325582,0.0,57,15,0.5,5,---,176.32968616485596,2019-05-10 01:45:05.979305
+Gauss functions,Immunotherapy,11,Train,BruteForce Threshold,0.7916666666666666,0.7916666666666666,0.0,1.0,0.0,0.8837209302325582,0.0,57,15,0.5,5,0.5167794078199989,2.924999237060547,2019-05-10 01:45:09.123305
