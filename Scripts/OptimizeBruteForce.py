@@ -50,7 +50,7 @@ class OptimizeBruteForce(object):
         print("Time: {}".format(measured_time))
         print("-----------------------------------------------------------------------------------")
 
-        self.fuzzyHelper.saveResults(variables['results_folder'] + variables["results_file"], ["Train: BruteForce S-Functions ", accuracy, precision[0], precision[1], recall[0], recall[1], fscore[0], fscore[1], support[0], support[1], s_function_center, s_function_width, "---", measured_time])
+        self.fuzzyHelper.saveResults(variables['results_folder'] + variables["results_file"], [variables["test_type"], variables["dataset_name"], variables["gausses"], "Train", "BruteForce S-Functions", accuracy, precision[0], precision[1], recall[0], recall[1], fscore[0], fscore[1], support[0], support[1], s_function_center, s_function_width, "---", measured_time])
 
         return s_function_center
 
@@ -76,6 +76,6 @@ class OptimizeBruteForce(object):
         print("Time: {}".format(measured_time))
         print("-----------------------------------------------------------------------------------")
 
-        self.fuzzyHelper.saveResults(variables['results_folder'] + variables["results_file"], ["Train: BruteForce Threshold", accuracy, precision[0], precision[1], recall[0], recall[1], fscore[0], fscore[1], support[0], support[1], s_function_center, s_function_width, threshold, measured_time])
+        self.fuzzyHelper.saveResults(variables['results_folder'] + variables["results_file"], [variables["test_type"], variables["dataset_name"], variables["gausses"], "Train", "BruteForce Threshold", accuracy, precision[0], precision[1], recall[0], recall[1], fscore[0], fscore[1], support[0], support[1], s_function_center, s_function_width, threshold, measured_time])
 
         return threshold

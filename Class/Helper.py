@@ -58,6 +58,10 @@ class Helper(object):
         display(df)
         return df
 
+    def loadDatasetResults(self, dataset):
+        df = pd.read_csv(open("Results/" + dataset + ".csv", "rb"))
+        display(df)
+        return df
 
     def saveFuzzificationStats(self, data):
         columns = ["Dataset", "Gausses","Samples", "Train s.", "Test s.", "Changed s.", "% changed s.", "Implicants", "Features", "F. after reduct"

@@ -9,14 +9,14 @@ variables = {
     "data_folder": generalSettings.data_folder + dataset + ".csv",
     "backup_folder": generalSettings.backup_folder + dataset + "/" + str(generalSettings.gausses) + " Gausses/",
     "results_folder": generalSettings.results_folder,
-    "results_file": dataset + " - " + str(generalSettings.gausses) + " Gausses.csv",
+    "results_file": dataset + ".csv",
 
     "class_1": class_1,
     "class_2": class_2,
     
     "feature_numbers": 13,
     "gausses": generalSettings.gausses,
-
+    "test_type": generalSettings.test_type,
 
     "set_min": 0,
     "set_max": 1,

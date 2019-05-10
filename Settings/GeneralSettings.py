@@ -1,4 +1,5 @@
 gausses = 11
+test_type = "Gauss functions"
 
 data_folder = "../Data/"
 backup_folder = "Pickle/"

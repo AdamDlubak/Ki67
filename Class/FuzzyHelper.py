@@ -1,5 +1,6 @@
 import os
 import pickle
+import datetime
 import numpy as np
 import pandas as pd
 from tqdm import tqdm
@@ -28,8 +29,14 @@ class FuzzyHelper(object):
             input_values[x] = row[x]
 
         classing.inputs(input_values)
-        classing.compute()
 
+        try:
+            classing.compute()
+        except:
+            row['Predicted Value'] = 0.5
+            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+            return row
+            
         if self.variables["show_results"]:
             decision.view(sim=classing)
             print(classing.output['Decision'])
@@ -143,8 +150,9 @@ class FuzzyHelper(object):
  
     def saveResults(self, results_path, series):
         path = results_path
-        columns = ["Type", "Accuracy", "Precision A", "Precision B", "Recall A", "Recall B", "F-Score A", "F-Score B", "Support A", "Support B", "S-Functions Center", "S-Functions Width", "Threshold", "Time (s)"]
+        columns = ["Test type", "Dataset", "Gausses", "Data Type", "Operation", "Accuracy", "Precision A", "Precision B", "Recall A", "Recall B", "F-Score A", "F-Score B", "Support A", "Support B", "S-Functions Center", "S-Functions Width", "Threshold", "Time (s)", "Test date"]
         df = pd.DataFrame(columns=columns)
+        series = series + [datetime.datetime.now()]
         s = pd.Series(series, index=columns)
         df = df.append(s, ignore_index = True)
         df.to_csv(path, index = False, header=(not os.path.exists(path)), mode="a")
