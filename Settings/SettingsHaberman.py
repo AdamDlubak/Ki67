@@ -1,8 +1,8 @@
 import Settings.GeneralSettings as generalSettings
 
 dataset = "Haberman"
-class_1 = "Zero"
-class_2 = "One"
+class_1 = "One"
+class_2 = "Zero"
 
 variables = {
     "dataset_name": dataset,
