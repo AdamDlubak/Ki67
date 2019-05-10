@@ -1,0 +1,2 @@
+Test type,Dataset,Gausses,Data Type,Operation,Accuracy,Precision A,Precision B,Recall A,Recall B,F-Score A,F-Score B,Support A,Support B,S-Functions Center,S-Functions Width,Threshold,Time (s),Test date
+Gauss functions,HTRU,3,Train,No Optymalization,0.9171672021232016,1.0,0.9164376805467483,0.09534706331045004,1.0,0.17409470752089135,0.9563970588235293,1311,13007,0.5,5,---,165.11713123321533,2019-05-10 13:36:20.757934
