@@ -1,4 +1,4 @@
-gausses = 9
+gausses = 3
 test_type = "Gauss functions"
 
 data_folder = "../Data/"

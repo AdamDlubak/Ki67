@@ -37,7 +37,8 @@ class LoadImage(object):
         return features_df, fuzzifier
     
     def setDecision(self, features_df, searched_class):
-        return features_df.apply(self.makeDecision, variables = self.variables, searched_class = searched_class, axis=1)
+        print(searched_class)
+        return features_df.apply(self.makeDecision, searched_class = searched_class, axis=1)
         
     def splitDataForTrainingTest(self, features_df, fuzzifier, test_size = 0.2):
         train_features_df, test_features_df = train_test_split(features_df, test_size=test_size, stratify=features_df.Decision)
@@ -49,7 +50,9 @@ class LoadImage(object):
             fuzzifier.features[3].label: 0, 
             fuzzifier.features[4].label: 0, 
             fuzzifier.features[5].label: 0, 
-            fuzzifier.features[6].label: 0, 
+            fuzzifier.features[6].label: 0,
+            fuzzifier.features[7].label: 0, 
+            fuzzifier.features[8].label: 0, 
             "Image": "Black",
             "Decision": self.variables["class_other"],
             "Predicted Value": ""
@@ -63,6 +66,8 @@ class LoadImage(object):
             fuzzifier.features[4].label: 0, 
             fuzzifier.features[5].label: 0, 
             fuzzifier.features[6].label: 0, 
+            fuzzifier.features[7].label: 0, 
+            fuzzifier.features[8].label: 0, 
             "Image": "Black",
             "Decision": self.variables["class_other"],
             "Predicted Value": ""
@@ -71,7 +76,21 @@ class LoadImage(object):
         pickle.dump(train_features_df, open(self.variables["backup_folder"] + "train_features_df.p", "wb"))
         pickle.dump(test_features_df, open(self.variables["backup_folder"] + "test_features_df.p", "wb"))
 
-        return features_df.shape[0], train_features_df.shape[0], test_features_df.shape[0]
+        class_1_features_occurence = features_df.loc[features_df.Decision == self.variables["class_1"]]["Decision"].count()
+        class_2_features_occurence = features_df.loc[features_df.Decision == self.variables["class_2"]]["Decision"].count()
+
+        class_1_train_occurence = train_features_df.loc[train_features_df.Decision == self.variables["class_1"]]["Decision"].count()
+        class_2_train_occurence = train_features_df.loc[train_features_df.Decision == self.variables["class_2"]]["Decision"].count()
+
+        class_1_test_occurence = test_features_df.loc[test_features_df.Decision == self.variables["class_1"]]["Decision"].count()
+        class_2_test_occurence = test_features_df.loc[test_features_df.Decision == self.variables["class_2"]]["Decision"].count()
+
+
+        features_result = "{} ({}/{})".format(features_df.shape[0], class_1_features_occurence, class_2_features_occurence)
+        train_result = "{} ({}/{})".format(train_features_df.shape[0], class_1_train_occurence, class_2_train_occurence)
+        test_result = "{} ({}/{})".format(test_features_df.shape[0], class_1_test_occurence, class_2_test_occurence)
+
+        return features_result, train_result, test_result, train_features_df.shape[0]
 
     def makeDecision(self, row, searched_class):
         if row["Image"] == searched_class:
@@ -86,6 +105,7 @@ class LoadImage(object):
         d_results = self.saveVariables()
         features_df, fuzzifier = self.prepareData(d_results, test_mode)
         features_df = self.setDecision(features_df, searched_class)
-        samples, train_samples, test_samples = self.splitDataForTrainingTest(features_df, fuzzifier)
+        samples_stats, train_stats, test_stats, train_samples = self.splitDataForTrainingTest(features_df, fuzzifier)
         
-        return samples, train_samples, test_samples
+        
+        return samples_stats, train_stats, test_stats, train_samples

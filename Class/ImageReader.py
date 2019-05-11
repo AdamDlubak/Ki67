@@ -11,11 +11,12 @@ class ImageReader(object):
 
     def loadImages(self, variables):
         for name in listdir(self.path):
-            file_path = self.path + "/" + name
+            file_path = self.path + name
+            print(file_path)
             self.images.append(io.imread(file_path))
             self.image_names.append(name.replace(variables["extension"], ''))
             self.image_decisions.append(name[:-4]) 
-
+        
     def printImage(self, image, title=""):
         fig = plt.figure()
         fig.suptitle(title, fontsize=13)
