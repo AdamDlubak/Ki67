@@ -168,6 +168,7 @@ class RulesExtractor(object):
 
     def generateRules(self, rule_antecedents, d_results, decision):
         rules = []
+        
         for idx, x in enumerate(rule_antecedents):
             if x:
                 rules.append(ctrl.Rule(x, decision[d_results[idx]]))

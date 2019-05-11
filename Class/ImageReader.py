@@ -1,6 +1,6 @@
 from os import listdir
 from matplotlib import pyplot as plt
-import cv2
+from skimage import io
 
 class ImageReader(object):
     def __init__(self, path):
@@ -12,13 +12,8 @@ class ImageReader(object):
     def loadImages(self, variables):
         for name in listdir(self.path):
             file_path = self.path + "/" + name
-            self.images.append(cv2.imread(file_path))
+            self.images.append(io.imread(file_path))
             self.image_names.append(name.replace(variables["extension"], ''))
-
-            # if name.startswith("background"):
-                # self.image_decisions.append(variables["class_1"])  
-            # else:
-                # self.image_decisions.append(variables["class_2"]) 
             self.image_decisions.append(name[:-4]) 
 
     def printImage(self, image, title=""):

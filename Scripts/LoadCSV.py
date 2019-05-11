@@ -11,8 +11,8 @@ class LoadCSV(object):
     def __init__(self):
         self.variables = []
         
-    def savVariables(self):
-        d_results = [self.variables["class_1"], self.variables["class_2"]]
+    def saveVariables(self):
+        d_results = [self.variables["class_2"], self.variables["class_1"]]
         if not os.path.exists(self.variables["backup_folder"]):
             os.makedirs(self.variables["backup_folder"])
         if not os.path.exists(self.variables["results_folder"]):
@@ -56,7 +56,7 @@ class LoadCSV(object):
     def worker(self, variables):
         self.variables= variables
 
-        d_results = self.savVariables()
+        d_results = self.saveVariables()
         features_df = self.prepareData(d_results)
         samples_stats, train_stats, test_stats, train_samples = self.splitDataForTrainingTest(features_df)
 

@@ -10,7 +10,7 @@ class Ki67Test(object):
 
     def __init__(self, variables, s_function_width, s_function_center = 0.5, threshold = -1):
         self.path = variables['backup_folder']
-        self.d_results = [variables["class_1"], variables["class_2"]]
+        self.d_results = [variables["class_2"], variables["class_1"]]
         self.x_range = np.arange(variables["set_min"], variables["set_max"], variables["fuzzy_sets_precision"])
         self.s_function_width = s_function_width
         self.fuzzyHelper = FuzzyHelper(variables)

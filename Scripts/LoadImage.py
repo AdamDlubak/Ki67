@@ -12,7 +12,7 @@ class LoadImage(object):
         self.variables = []
 
     def saveVariables(self):
-        d_results = [self.variables["class_1"], self.variables["class_2"]]
+        d_results = [self.variables["class_2"], self.variables["class_1"]]
         if not os.path.exists(self.variables["backup_folder"]):
             os.makedirs(self.variables["backup_folder"])
         if not os.path.exists(self.variables["results_folder"]):
@@ -37,7 +37,7 @@ class LoadImage(object):
         return features_df, fuzzifier
     
     def setDecision(self, features_df, searched_class):
-        return features_df.apply(self.makeDecision, self.variables = self.variables, searched_class = searched_class, axis=1)
+        return features_df.apply(self.makeDecision, variables = self.variables, searched_class = searched_class, axis=1)
         
     def splitDataForTrainingTest(self, features_df, fuzzifier, test_size = 0.2):
         train_features_df, test_features_df = train_test_split(features_df, test_size=test_size, stratify=features_df.Decision)
@@ -86,6 +86,6 @@ class LoadImage(object):
         d_results = self.saveVariables()
         features_df, fuzzifier = self.prepareData(d_results, test_mode)
         features_df = self.setDecision(features_df, searched_class)
-        samples, train_samples, test_samples =  = self.splitDataForTrainingTest(features_df, fuzzifier)
+        samples, train_samples, test_samples = self.splitDataForTrainingTest(features_df, fuzzifier)
         
         return samples, train_samples, test_samples

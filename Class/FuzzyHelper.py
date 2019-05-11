@@ -18,9 +18,9 @@ class FuzzyHelper(object):
         
     def setDecisions(self, row, threshold):
         if row['Predicted Value'] > threshold:
-            row['Decision Fuzzy'] = self.variables["class_1"]
-        else:
             row['Decision Fuzzy'] = self.variables["class_2"]
+        else:
+            row['Decision Fuzzy'] = self.variables["class_1"]
         return row
 
     def makePrediction(self, row, classing, rules_feature_names, decision):

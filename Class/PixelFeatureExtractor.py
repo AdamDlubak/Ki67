@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
-import cv2
+from skimage import io
+from skimage.color import rgb2hsv, rgb2hed
 from tqdm import tqdm
 from matplotlib import pyplot as plt
 
@@ -21,7 +22,7 @@ class PixelFeatureExtractor(object):
 
             r_image, g_image, b_image = self.splitIntoRgbChannels(image)
             h_image, s_image, v_image = self.splitIntoHsvChannels(image)
-            intensity_mean = (r_image + g_image + b_image) / 3
+            h_hed_image, e_hed_image, d_hed_image = self.splitIntoHedChannels(image)
 
             data_columns = {
                 self.fuzzifier.features[0].label: r_image.ravel(),
@@ -30,7 +31,9 @@ class PixelFeatureExtractor(object):
                 self.fuzzifier.features[3].label: h_image.ravel(),
                 self.fuzzifier.features[4].label: s_image.ravel(),
                 self.fuzzifier.features[5].label: v_image.ravel(),
-                self.fuzzifier.features[6].label: intensity_mean.ravel()
+                self.fuzzifier.features[6].label: h_hed_image.ravel(),
+                self.fuzzifier.features[7].label: e_hed_image.ravel(),
+                self.fuzzifier.features[8].label: d_hed_image.ravel(),
             }
 
             tmp_features_table = pd.DataFrame(data = data_columns)
@@ -47,7 +50,6 @@ class PixelFeatureExtractor(object):
                     self.fuzzifier.features[3].label,
                     self.fuzzifier.features[4].label,
                     self.fuzzifier.features[5].label,
-                    self.fuzzifier.features[6].label
                 ]] != 0).all(axis=1)]
 
             if idx == 0:
@@ -59,13 +61,25 @@ class PixelFeatureExtractor(object):
         self.showResults(self.features_table)
 
     def splitIntoRgbChannels(self, image):
-        b, g, r = cv2.split(image)
+        r = image[:, :, 0]
+        g = image[:, :, 1]
+        b = image[:, :, 2]
         return r, g, b
 
     def splitIntoHsvChannels(self, image):
-        hsv_image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
-        h, s, v = cv2.split(hsv_image)
+        hsv_image = rgb2hsv(image)
+        h = hsv_image[:, :, 0]
+        s = hsv_image[:, :, 1]
+        v = hsv_image[:, :, 2]
         return h, s, v
+
+
+    def splitIntoHedChannels(self, image):
+        hed_image = rgb2hed(image)
+        h = hed_image[:, :, 0]
+        e = hed_image[:, :, 1]
+        d = hed_image[:, :, 2]
+        return h, e, d
 
     def normalizeFeatures(self):
         for x in self.fuzzifier.features:
