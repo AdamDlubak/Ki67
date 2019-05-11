@@ -13,11 +13,14 @@ class OptimizeBruteForce(object):
 
     def __init__(self, variables, s_function_width):
         self.path = variables['backup_folder']
-        self.d_results = [variables["class_1"], variables["class_2"]]
+        self.d_results = [variables["class_2"], variables["class_1"]]
         self.x_range = np.arange(variables["set_min"], variables["set_max"], variables["fuzzy_sets_precision"])
         self.s_function_width = s_function_width
         self.fuzzyHelper = FuzzyHelper(variables)
         self.loadData(variables)
+
+    def highlightClassOne(self, row):
+        return ['background-color: green' if self.variables["class_1"] == x else "" for x in row]
 
     def loadData(self, variables):
         self.decision = pickle.load(open(self.path + "decision.p", "rb"))
@@ -50,6 +53,8 @@ class OptimizeBruteForce(object):
         print("Time: {}".format(measured_time))
         print("-----------------------------------------------------------------------------------")
 
+        df = df.sort_values(by=["Predicted Value"])
+        display(df)
         self.fuzzyHelper.saveResults(variables['results_folder'] + variables["results_file"], [variables["test_type"], variables["dataset_name"], variables["gausses"], "Train", "BruteForce S-Functions", accuracy, precision[0], precision[1], recall[0], recall[1], fscore[0], fscore[1], support[0], support[1], s_function_center, s_function_width, "---", measured_time])
 
         return s_function_center
@@ -57,11 +62,14 @@ class OptimizeBruteForce(object):
     def thresholdWorker(self, variables, s_function_center, s_function_width, precision = 0.001):
         start = time.time()
         accuracy, df = self.fuzzyHelper.sFunctionsValue(s_function_center, s_function_width, self.df, variables, self.x_range, self.rules_extractor, self.rule_antecedents, self.d_results, self.decision)
+        display(df.sort_values(by=["Predicted Value"]))
+        print("-----------------------------------------")
         threshold = (slice(df["Predicted Value"].min(), df["Predicted Value"].max(), precision), )
+        print(threshold)
         params = (df, start)
         optimization_result = optimize.brute(self.fuzzyHelper.thresholdOptBrute, threshold, args=params, full_output=True, finish=optimize.fmin)
         end = time.time()
-
+        print(optimization_result)
         accuracy = 1 - optimization_result[1]
         threshold = optimization_result[0][0]
         measured_time = end - start
@@ -76,6 +84,8 @@ class OptimizeBruteForce(object):
         print("Time: {}".format(measured_time))
         print("-----------------------------------------------------------------------------------")
 
+        df = df.sort_values(by=["Predicted Value"])
+        display(df)
         self.fuzzyHelper.saveResults(variables['results_folder'] + variables["results_file"], [variables["test_type"], variables["dataset_name"], variables["gausses"], "Train", "BruteForce Threshold", accuracy, precision[0], precision[1], recall[0], recall[1], fscore[0], fscore[1], support[0], support[1], s_function_center, s_function_width, threshold, measured_time])
 
         return threshold

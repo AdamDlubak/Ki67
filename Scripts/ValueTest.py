@@ -11,7 +11,7 @@ class ValueTest(object):
     def __init__(self, variables, s_function_width, is_train_df = True, s_function_center = 0.5, threshold = -1):
         self.path = variables['backup_folder']
         self.variables = variables
-        self.d_results = [variables["class_1"], variables["class_2"]]
+        self.d_results = [variables["class_2"], variables["class_1"]]
         self.x_range = np.arange(variables["set_min"], variables["set_max"], variables["fuzzy_sets_precision"])
         self.s_function_width = s_function_width
         self.fuzzyHelper = FuzzyHelper(variables)
@@ -22,6 +22,7 @@ class ValueTest(object):
 
     def loadData(self, variables, is_train_df):
         self.decision = pickle.load(open(self.path + "decision.p", "rb"))
+
         reductor = pickle.load(open(self.path + "reductor.p", "rb"))
         features = pickle.load(open(self.path + "features.p", "rb"))
         decision_table_with_reduct = pickle.load(open(self.path + "decision_table_with_reduct.p", "rb"))
@@ -48,6 +49,7 @@ class ValueTest(object):
         print("-----------------------------------------------------------------------------------")
 
         df = df.sort_values(by=["Predicted Value"])
+        self.decision.view()
         display(df.style.apply(self.highlightClassOne, axis = 1))
         pickle.dump(df, open(variables["backup_folder"] + self.data_type + "_df_results.p", "wb"))
 
