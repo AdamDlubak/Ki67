@@ -15,7 +15,10 @@ class ImageReader(object):
             print(file_path)
             self.images.append(io.imread(file_path))
             self.image_names.append(name.replace(variables["extension"], ''))
-            self.image_decisions.append(name[:-4]) 
+            if name[:-4] == variables["class_1"]:
+                self.image_decisions.append(variables["class_1"])
+            else:
+                self.image_decisions.append(variables["class_2"])
         
     def printImage(self, image, title=""):
         fig = plt.figure()

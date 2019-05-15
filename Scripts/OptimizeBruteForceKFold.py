@@ -72,7 +72,7 @@ class OptimizeBruteForceKFold(object):
             print("Time: {}".format(measured_time))
             print("-----------------------------------------------------------------------------------")
 
-            self.fuzzyHelper.saveResults(variables['results_folder'] + variables["results_file"], ["Train: BruteForce S-Functions K-Fold {}".format(idx), test_accuracy, test_precision[0], test_precision[1], test_recall[0], test_recall[1], test_fscore[0], test_fscore[1], test_support[0], test_support[1], s_function_center, s_function_width, "---", measured_time])
+            self.fuzzyHelper.saveResults(variables['results_folder'] + variables["results_file"], [variables["test_type"], variables["dataset_name"], variables["gausses"], "Train", "BruteForce S-Functions K-Fold {}".format(idx), test_accuracy, test_precision[0], test_precision[1], test_recall[0], test_recall[1], test_fscore[0], test_fscore[1], test_support[0], test_support[1], s_function_center, s_function_width, "---", measured_time])
 
         mean_s_function_center = sum(s_function_centers) / len(s_function_centers) 
         return best_s_function_center, mean_s_function_center

@@ -50,9 +50,6 @@ class LoadImage(object):
             fuzzifier.features[3].label: 0, 
             fuzzifier.features[4].label: 0, 
             fuzzifier.features[5].label: 0, 
-            fuzzifier.features[6].label: 0,
-            fuzzifier.features[7].label: 0, 
-            fuzzifier.features[8].label: 0, 
             "Image": "Black",
             "Decision": self.variables["class_other"],
             "Predicted Value": ""
@@ -65,9 +62,6 @@ class LoadImage(object):
             fuzzifier.features[3].label: 0, 
             fuzzifier.features[4].label: 0, 
             fuzzifier.features[5].label: 0, 
-            fuzzifier.features[6].label: 0, 
-            fuzzifier.features[7].label: 0, 
-            fuzzifier.features[8].label: 0, 
             "Image": "Black",
             "Decision": self.variables["class_other"],
             "Predicted Value": ""

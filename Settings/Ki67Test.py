@@ -1,8 +1,8 @@
 import Settings.GeneralSettings as generalSettings
 
 dataset = "Ki67"
-class_1 = "brown"
-class_2 = "other"
+class_1 = "other"
+class_2 = "brown"
 
 variables = {
     "dataset_name": dataset,
@@ -14,15 +14,15 @@ variables = {
 
     "class_1": class_1,
     "class_2": class_2,
-    "class_other": class_2,
+    "class_other": class_1,
     
-    "feature_numbers": 9,
+    "feature_numbers": 6,
     "gausses": generalSettings.gausses,
     "test_type": generalSettings.test_type,
 
     "set_min": 0,
     "set_max": 1,
-    "fuzzy_sets_precision": 0.01,
+    "fuzzy_sets_precision": 0.0001,
     "show_results": False,
     "load_previous_data": False,
 

@@ -18,6 +18,7 @@ class OptimizeBruteForce(object):
         self.s_function_width = s_function_width
         self.fuzzyHelper = FuzzyHelper(variables)
         self.loadData(variables)
+        self.variables = variables
 
     def highlightClassOne(self, row):
         return ['background-color: green' if self.variables["class_1"] == x else "" for x in row]
@@ -32,7 +33,7 @@ class OptimizeBruteForce(object):
         self.df = pickle.load(open(self.path + "train_features_df.p", "rb"))
 
 
-    def sFunctionsWorker(self, variables, constraints, s_function_width):
+    def sFunctionsWorker(self, variables, constraints, s_function_width, show_results = True):
         start = time.time()
         params = (s_function_width, self.df, variables, self.x_range, self.rules_extractor, self.rule_antecedents, self.d_results, self.decision)
         optimization_result = optimize.brute(self.fuzzyHelper.sFunctionsOptBrute, constraints, args=params, full_output=True, finish=optimize.fmin)
@@ -49,32 +50,31 @@ class OptimizeBruteForce(object):
   
         print("-----------------------------------------------------------------------------------")
         print("Center Point: {}".format(s_function_center))
-        print("Train Accuracy: {}".format(accuracy))
         print("Time: {}".format(measured_time))
         print("-----------------------------------------------------------------------------------")
 
         df = df.sort_values(by=["Predicted Value"])
-        display(df)
+        if show_results:
+            self.decision.view()
+            display(df.style.apply(self.highlightClassOne, axis = 1))
+            
         self.fuzzyHelper.saveResults(variables['results_folder'] + variables["results_file"], [variables["test_type"], variables["dataset_name"], variables["gausses"], "Train", "BruteForce S-Functions", accuracy, precision[0], precision[1], recall[0], recall[1], fscore[0], fscore[1], support[0], support[1], s_function_center, s_function_width, "---", measured_time])
 
         return s_function_center
 
-    def thresholdWorker(self, variables, s_function_center, s_function_width, precision = 0.001):
+    def thresholdWorker(self, variables, s_function_center, s_function_width, precision = 0.001, show_results = True):
         start = time.time()
         accuracy, df = self.fuzzyHelper.sFunctionsValue(s_function_center, s_function_width, self.df, variables, self.x_range, self.rules_extractor, self.rule_antecedents, self.d_results, self.decision)
-        display(df.sort_values(by=["Predicted Value"]))
-        print("-----------------------------------------")
         threshold = (slice(df["Predicted Value"].min(), df["Predicted Value"].max(), precision), )
-        print(threshold)
         params = (df, start)
         optimization_result = optimize.brute(self.fuzzyHelper.thresholdOptBrute, threshold, args=params, full_output=True, finish=optimize.fmin)
         end = time.time()
-        print(optimization_result)
         accuracy = 1 - optimization_result[1]
         threshold = optimization_result[0][0]
         measured_time = end - start
-
+        
         df = df.apply(self.fuzzyHelper.setDecisions, threshold = threshold, axis=1)
+        self.df = df
         accuracy, precision, recall, fscore, support = self.fuzzyHelper.getScores(df)
 
         print("-----------------------------------------------------------------------------------")
@@ -85,7 +85,11 @@ class OptimizeBruteForce(object):
         print("-----------------------------------------------------------------------------------")
 
         df = df.sort_values(by=["Predicted Value"])
-        display(df)
+
+        if show_results:
+            self.decision.view()
+            display(df.style.apply(self.highlightClassOne, axis = 1))
+
         self.fuzzyHelper.saveResults(variables['results_folder'] + variables["results_file"], [variables["test_type"], variables["dataset_name"], variables["gausses"], "Train", "BruteForce Threshold", accuracy, precision[0], precision[1], recall[0], recall[1], fscore[0], fscore[1], support[0], support[1], s_function_center, s_function_width, threshold, measured_time])
 
         return threshold

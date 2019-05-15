@@ -39,7 +39,8 @@ class Ki67Test(object):
         print("Time: {}".format(measured_time))
         print("-----------------------------------------------------------------------------------")
 
-        display(df.sort_values(by=["Predicted Value"]))
+        self.df = df.sort_values(by=["Predicted Value"])
+        display(self.df)
         pickle.dump(df, open(variables["backup_folder"] + self.data_type + "_df_results.p", "wb"))
 
 
@@ -66,7 +67,8 @@ class Ki67Test(object):
         print("Time: {}".format(measured_time))
         print("-----------------------------------------------------------------------------------")
 
-        display(df.sort_values(by=["Predicted Value"]))
+        self.df = df.sort_values(by=["Predicted Value"])
+        display(self.df)
         pickle.dump(df, open(variables["backup_folder"] + self.data_type + "_df_results.p", "wb"))
 
         self.fuzzyHelper.saveResults(variables['results_folder'] + variables["results_file"], [self.data_type + ": " + "Threshold Optymalization", accuracy, precision[0], precision[1], recall[0], recall[1], fscore[0], fscore[1], support[0], support[1], s_function_center, self.s_function_width, threshold, measured_time])

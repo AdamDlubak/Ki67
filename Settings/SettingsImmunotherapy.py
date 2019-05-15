@@ -40,4 +40,4 @@ variables = {
 constraints = (slice(0, 1, 0.05), )
 s_function_width = generalSettings.s_function_width
 sigma_mean_params = generalSettings.sigma_mean_params
-n_folds = 10
+n_folds = 5

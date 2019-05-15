@@ -35,7 +35,7 @@ class ValueTest(object):
             self.df = pickle.load(open(self.path + "test_features_df.p", "rb"))
             self.data_type = "Test"
 
-    def sFunction(self, variables, s_function_center, title):
+    def sFunction(self, variables, s_function_center, title, show_results = True):
         print("-----------------------------------------------------------------------------------")
         start = time.time()
         _, df = self.fuzzyHelper.sFunctionsValue(s_function_center, self.s_function_width, self.df, variables, self.x_range, self.rules_extractor, self.rule_antecedents, self.d_results, self.decision)
@@ -49,20 +49,21 @@ class ValueTest(object):
         print("-----------------------------------------------------------------------------------")
 
         df = df.sort_values(by=["Predicted Value"])
-        self.decision.view()
-        display(df.style.apply(self.highlightClassOne, axis = 1))
+        if show_results:
+            self.decision.view()
+            display(df.style.apply(self.highlightClassOne, axis = 1))
         pickle.dump(df, open(variables["backup_folder"] + self.data_type + "_df_results.p", "wb"))
 
 
         self.fuzzyHelper.saveResults(variables['results_folder'] + variables["results_file"], [variables["test_type"], variables["dataset_name"], variables["gausses"], self.data_type, title, accuracy, precision[0], precision[1], recall[0], recall[1], fscore[0], fscore[1], support[0], support[1], s_function_center, self.s_function_width, "---", measured_time])
 
-    def noOptymalizationWorker(self, variables):
-            self.sFunction(variables, 0.5, "No Optymalization")
+    def noOptymalizationWorker(self, variables, show_results = True):
+            self.sFunction(variables, 0.5, "No Optymalization", show_results)
     
-    def sOptymalizationWorker(self, variables, center_point, description = "Value S-Functions"):
-            self.sFunction(variables, center_point, description)
+    def sOptymalizationWorker(self, variables, center_point, show_results = True):
+            self.sFunction(variables, center_point, "Value S-Functions", show_results)
 
-    def thresholdWorker(self, variables, s_function_center, threshold, precision = 0.001):   
+    def thresholdWorker(self, variables, s_function_center, threshold, precision = 0.001, show_results = True):   
         print("-----------------------------------------------------------------------------------")
         start = time.time()
         _, df = self.fuzzyHelper.sFunctionsValue(s_function_center, self.s_function_width, self.df, variables, self.x_range, self.rules_extractor, self.rule_antecedents, self.d_results, self.decision)
@@ -77,8 +78,11 @@ class ValueTest(object):
         print(self.data_type + " Accuracy: {}".format(accuracy))
         print("Time: {}".format(measured_time))
         print("-----------------------------------------------------------------------------------")
-
-        display(df.sort_values(by=["Predicted Value"]))
+       
+        df = df.sort_values(by=["Predicted Value"])
+        if show_results:
+            display(df.style.apply(self.highlightClassOne, axis = 1))
+            self.decision.view()
         pickle.dump(df, open(variables["backup_folder"] + self.data_type + "_df_results.p", "wb"))
 
         self.fuzzyHelper.saveResults(variables['results_folder'] + variables["results_file"], [variables["test_type"], variables["dataset_name"], variables["gausses"], self.data_type, "Value Threshold", accuracy, precision[0], precision[1], recall[0], recall[1], fscore[0], fscore[1], support[0], support[1], s_function_center, self.s_function_width, threshold, measured_time])

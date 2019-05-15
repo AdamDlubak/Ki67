@@ -1,9 +1,10 @@
-import pandas as pd
 import numpy as np
-from skimage import io
-from skimage.color import rgb2hsv, rgb2hed
+import pandas as pd
 from tqdm import tqdm
+from skimage import io
+from IPython import display
 from matplotlib import pyplot as plt
+from skimage.color import rgb2hsv, rgb2hed
 
 class PixelFeatureExtractor(object):
     def __init__(self, variables, fuzzifier):
@@ -21,19 +22,19 @@ class PixelFeatureExtractor(object):
         for idx, image in enumerate(image_reader.images):
 
             r_image, g_image, b_image = self.splitIntoRgbChannels(image)
-            h_image, s_image, v_image = self.splitIntoHsvChannels(image)
+            # h_image, s_image, v_image = self.splitIntoHsvChannels(image)
             h_hed_image, e_hed_image, d_hed_image = self.splitIntoHedChannels(image)
 
             data_columns = {
                 self.fuzzifier.features[0].label: r_image.ravel(),
                 self.fuzzifier.features[1].label: g_image.ravel(),
                 self.fuzzifier.features[2].label: b_image.ravel(),
-                self.fuzzifier.features[3].label: h_image.ravel(),
-                self.fuzzifier.features[4].label: s_image.ravel(),
-                self.fuzzifier.features[5].label: v_image.ravel(),
-                self.fuzzifier.features[6].label: h_hed_image.ravel(),
-                self.fuzzifier.features[7].label: e_hed_image.ravel(),
-                self.fuzzifier.features[8].label: d_hed_image.ravel(),
+                # self.fuzzifier.features[3].label: h_image.ravel(),
+                # self.fuzzifier.features[4].label: s_image.ravel(),
+                # self.fuzzifier.features[5].label: v_image.ravel(),
+                self.fuzzifier.features[3].label: h_hed_image.ravel(),
+                self.fuzzifier.features[4].label: e_hed_image.ravel(),
+                self.fuzzifier.features[5].label: d_hed_image.ravel(),
             }
 
             tmp_features_table = pd.DataFrame(data = data_columns)
@@ -47,9 +48,6 @@ class PixelFeatureExtractor(object):
                     self.fuzzifier.features[0].label,   
                     self.fuzzifier.features[1].label,
                     self.fuzzifier.features[2].label,
-                    self.fuzzifier.features[3].label,
-                    self.fuzzifier.features[4].label,
-                    self.fuzzifier.features[5].label,
                 ]] != 0).all(axis=1)]
 
             if idx == 0:

@@ -53,7 +53,7 @@ class FuzzyHelper(object):
 
     def defineClassTwo(self, x, center_point, width):
         y = np.zeros(len(x))
-        idx = x >= center_point
+        idx = x > center_point
         y[idx] = fuzz.sigmf(x[idx], center_point, width)
         return y
 

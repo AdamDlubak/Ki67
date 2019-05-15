@@ -1,3 +1,4 @@
+import os
 import cv2
 import pickle
 import numpy as np
@@ -7,6 +8,10 @@ from matplotlib import pyplot as plt
 
 class Helper(object):
 
+    def boldMax(self, s):
+        is_max = s == s.max()
+        return ['font-weight: bold; text-decoration: underline' if v else '' for v in is_max]
+        
     def pairPlot(self, variables, data_file = "all_normalized_features_table", output_image_name = "features_pairplot"):
         df = pickle.load(open(variables['backup_folder'] + variables['pairplot_data_file']  + ".p", "rb"))
         variables, _, _ = pickle.load(open(variables['backup_folder'] + "parameters.p", "rb"))
@@ -58,14 +63,52 @@ class Helper(object):
         display(df)
         return df
 
-    def loadDatasetResults(self, dataset):
+    def loadDatasetResults(self, dataset, show = True):
         df = pd.read_csv(open("Results/" + dataset + ".csv", "rb"))
-        display(df)
+        df_to_print = df.style.apply(self.boldMax, subset=['Accuracy'])
+        if show:
+            display(df_to_print)
         return df
 
+    def getParamsToTests(self, dataset_name, gausses):
+        dataset_stats = self.loadDatasetResults(dataset_name, False)
+        dataset_stats = dataset_stats.loc[(dataset_stats["Gausses"] == gausses) & (dataset_stats["Data Type"] == "Train")].reset_index()
+        row_index = dataset_stats["Accuracy"].values.argmax()
+        if dataset_stats.loc[[row_index]]["Operation"].values == "BruteForce Threshold":
+            threshold = dataset_stats.loc[[row_index]]["Threshold"].values[0]
+            s_function_center = dataset_stats.loc[[row_index]]["S-Functions Center"].values[0]
+        elif dataset_stats.loc[[row_index]]["Operation"].values == "BruteForce S-Functions":
+            threshold = dataset_stats.loc[[row_index + 1]]["Threshold"].values[0]
+            s_function_center = dataset_stats.loc[[row_index + 1]]["S-Functions Center"].values[0]
+        else:
+            threshold = dataset_stats.loc[[row_index + 2]]["Threshold"].values[0]
+            s_function_center = dataset_stats.loc[[row_index + 2]]["S-Functions Center"].values[0]
+
+        return s_function_center, float(threshold)
+
+    def getDatasetBestScores(self, dataset):
+        for dataset_file in os.listdir("Results/"):
+            if dataset_file[:-4] == dataset:
+                df = pd.read_csv(open("Results/" + dataset_file, "rb"))
+                break
+        df = df.loc[df["Operation"] == "BruteForce Threshold"]
+        df["F-Score Average"] = (df["F-Score A"] + df["F-Score B"]) / 2
+        results = df.loc[df['F-Score Average'].idxmax()]
+
+        return float(results["S-Functions Center"]), float(results["Threshold"])
+
+    def loadBestResults(self):
+        columns = ["Test type", "Dataset", "Gausses", "Data Type", "Operation", "Accuracy", "F-Score Average", "Precision A", "Precision B", "Recall A", "Recall B", "F-Score A", "F-Score B", "Support A", "Support B", "S-Functions Center", "S-Functions Width", "Threshold", "Time (s)", "Test date"]
+        results = pd.DataFrame(columns = columns)
+        for dataset_file in os.listdir("Results/"):
+            df = pd.read_csv(open("Results/" + dataset_file, "rb"))
+            df = df.loc[df["Operation"] == "BruteForce Threshold"]
+            df["F-Score Average"] = (df["F-Score A"] + df["F-Score B"]) / 2
+            results = results.append(df.loc[df['F-Score Average'].idxmax()])
+        return results
+
     def saveFuzzificationStats(self, data):
-        columns = ["Dataset", "Gausses","Samples", "Train s.", "Test s.", "Changed s.", "% changed s.", "Implicants", "Features", "F. after reduct"
-]
+        columns = ["Dataset", "Gausses","Samples", "Train s.", "Test s.", "Changed s.", "% changed s.", "Implicants", "Features", "F. after reduct"]
         try:
             df = pickle.load(open("Summaries/Fuzzification Statistics.p", "rb"))
         except (OSError, IOError):
