@@ -1,9 +1,9 @@
 import numpy as np
 
 class Reductor(object):
-    def __init__(self, decision_table, variables):
+    def __init__(self, decision_table, settings):
         self.decision_table = decision_table
-        self.variables = variables
+        self.settings = settings
         
     def getReduct(self):
         self.reduct = []
@@ -49,19 +49,19 @@ class Reductor(object):
             if all(item == 0 for item in reduct_counter):
                 break
 
-        if self.variables["show_results"]:
+        if self.settings.show_results:
             print("Reduct - Index of features: " + str(self.reduct))
 
 
 
     def introduceReduct(self, decision_table):
-        decision_table_after_reduct = decision_table[
-            decision_table.columns[self.reduct]].copy()
+        decision_table_after_reduct = decision_table[decision_table.columns[self.reduct]].copy()
+        self.reduct = decision_table_after_reduct.columns
         features_number_after_reduct = len(decision_table_after_reduct.columns.values)
         decision_table_after_reduct['Decision'] = decision_table['Decision'].copy()
         decision_table_after_reduct = decision_table_after_reduct.reset_index(drop=True)
 
-        if self.variables["show_results"]:
+        if self.settings.show_results:
             display(decision_table_after_reduct)
 
         return decision_table_after_reduct, features_number_after_reduct

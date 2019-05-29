@@ -8,19 +8,18 @@ import skfuzzy as fuzz
 from skfuzzy import control as ctrl
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import precision_recall_fscore_support as score
-
 from Class.RulesSetter import RulesSetter as RulesSetter
 
 class FuzzyHelper(object):
 
-    def __init__(self, variables):
-        self.variables = variables
+    def __init__(self, settings):
+        self.settings = settings
         
     def setDecisions(self, row, threshold):
         if row['Predicted Value'] > threshold:
-            row['Decision Fuzzy'] = self.variables["class_2"]
+            row['Decision Fuzzy'] = self.settings.class_2
         else:
-            row['Decision Fuzzy'] = self.variables["class_1"]
+            row['Decision Fuzzy'] = self.settings.class_1
         return row
 
     def makePrediction(self, row, classing, rules_feature_names, decision):
@@ -32,17 +31,17 @@ class FuzzyHelper(object):
 
         try:
             classing.compute()
+
         except:
             row['Predicted Value'] = 0.5
             print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
             return row
             
-        if self.variables["show_results"]:
+        if self.settings.show_results:
             decision.view(sim=classing)
             print(classing.output['Decision'])
 
         row['Predicted Value'] = classing.output['Decision']
-        
         return row
 
     def defineClassOne(self, x, center_point, width):
@@ -59,8 +58,8 @@ class FuzzyHelper(object):
 
     def prepareRules(self, save, x_range, center_point, width, rules_extractor, rule_antecedents, d_results, decision, df = None):
         
-        decision[self.variables["class_1"]] = self.defineClassOne(x_range, center_point, -width)
-        decision[self.variables["class_2"]] = self.defineClassTwo(x_range, center_point, width)     
+        decision[self.settings.class_1] = self.defineClassOne(x_range, center_point, -width)
+        decision[self.settings.class_2] = self.defineClassTwo(x_range, center_point, width)     
         
         rules = rules_extractor.generateRules(rule_antecedents, d_results, decision)
         class_ctrl = ctrl.ControlSystem(rules)
@@ -71,12 +70,12 @@ class FuzzyHelper(object):
             if str(x).startswith('Antecedent'):
                 rules_feature_names.append(str(x).split(': ')[1])
         if save:
-            pickle.dump(classing, open(self.variables["backup_folder"] + "classing.p", "wb"))
-            pickle.dump(rules_feature_names, open(self.variables["backup_folder"] + "rules_feature_names.p", "wb"))    
-            pickle.dump(rules, open(self.variables["backup_folder"] + "rules.p", "wb"))
-            pickle.dump(decision, open(self.variables["backup_folder"] + "decision.p", "wb"))
+            pickle.dump(classing, open(self.settings.backup_folder + "classing.p", "wb"))
+            pickle.dump(rules_feature_names, open(self.settings.backup_folder + "rules_feature_names.p", "wb"))    
+            pickle.dump(rules, open(self.settings.backup_folder + "rules.p", "wb"))
+            pickle.dump(decision, open(self.settings.backup_folder + "decision.p", "wb"))
             _, df_to_save = self.sFunctionsWorker(df, x_range, center_point, width, rules_extractor, rule_antecedents, d_results, decision)
-            pickle.dump(df_to_save, open(self.variables["backup_folder"] + "df.p", "wb"))
+            pickle.dump(df_to_save, open(self.settings.backup_folder + "df.p", "wb"))
             
         return decision, classing, rules_feature_names
 
@@ -104,6 +103,7 @@ class FuzzyHelper(object):
 
         return accuracy, precision, recall, fscore, support
 
+    
     def sFunctionsWorker(self, df, x_range, center_point, width, rules_extractor, rule_antecedents, d_results, decision):
         decision, classing, rules_feature_names = self.prepareRules(False, x_range, center_point, width, rules_extractor, rule_antecedents, d_results, decision)
         df = self.prepareDataFrame(df, rules_feature_names)
@@ -111,12 +111,23 @@ class FuzzyHelper(object):
         accuracy, df = self.thresholdOptValue(center_point, df)
         return accuracy, df
 
-    def sFunctionsOptBrute(self, center_point, *params):
-        width, df, self.variables, x_range, rules_extractor, rule_antecedents, d_results, decision = params
-        accuracy, _ = self.sFunctionsWorker(df, x_range, center_point, width, rules_extractor, rule_antecedents, d_results, decision)
-        return 1 - accuracy
+    def adjustmentsOptBrute(self, adjustment_values, settings, fuzzify, train_data_for_worker, valueTest):
+        self.settings = settings
+        n_particles = adjustment_values.shape[0]  # number of particles
+        [fuzzify.workerKFold(self.settings, train_data_for_worker, adjustment_values[i]) for i in range(n_particles)]
+        fscore =  valueTest.noOptymalizationWorker(self.settings, False)
 
-    def sFunctionsValue(self, center_point, width, df, variables, x_range, rules_extractor, rule_antecedents, d_results, decision):
+        result = (fscore[0] + fscore[1]) / 2
+        return 1 - result
+
+    def sFunctionsOptBrute(self, center_point, *params):
+        width, df, test_df, self.settings, x_range, rules_extractor, rule_antecedents, d_results, decision = params
+        _, df = self.sFunctionsWorker(test_df, x_range, center_point, width, rules_extractor, rule_antecedents, d_results, decision)
+        test_accuracy, test_precision, test_recall, test_fscore, test_support = self.getScores(df, False)
+        result = (test_fscore[0] + test_fscore[1]) / 2
+        return 1 - result
+
+    def sFunctionsValue(self, center_point, width, df, settings, x_range, rules_extractor, rule_antecedents, d_results, decision):
         accuracy, df = self.sFunctionsWorker(df, x_range, center_point, width, rules_extractor, rule_antecedents, d_results, decision)
         return accuracy, df
 
@@ -150,7 +161,7 @@ class FuzzyHelper(object):
  
     def saveResults(self, results_path, series):
         path = results_path
-        columns = ["Test type", "Dataset", "Gausses", "Data Type", "Operation", "Accuracy", "Precision A", "Precision B", "Recall A", "Recall B", "F-Score A", "F-Score B", "Support A", "Support B", "S-Functions Center", "S-Functions Width", "Threshold", "Time (s)", "Test date"]
+        columns = ["Test type", "Dataset", "Style", "Gausses", "Adjustment", "Data Type", "Operation", "Accuracy", "Precision A", "Precision B", "Recall A", "Recall B", "F-Score A", "F-Score B", "Support A", "Support B", "S-Functions Center", "S-Functions Width", "Threshold", "Time (s)", "Test date"]
         df = pd.DataFrame(columns=columns)
         series = series + [datetime.datetime.now()]
         s = pd.Series(series, index=columns)

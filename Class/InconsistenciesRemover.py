@@ -2,10 +2,10 @@ import pandas as pd
 from tqdm import tqdm
 class InconsistenciesRemover(object):
 
-    def __init__(self, features_table, feature_labels, variables):
+    def __init__(self, features_table, feature_labels, settings):
         self.features_table = features_table
         self.feature_labels = feature_labels
-        self.variables = variables
+        self.settings = settings
         self.changed_decisions = 0
 
     def getOccurenceOfRows(self, df, remove_columns):
@@ -92,12 +92,12 @@ class InconsistenciesRemover(object):
             for idx, row_decision_table in features_decisions_occurence.iterrows():
                 if (row[self.feature_labels].values == row_decision_table[self.feature_labels]).all():
                         if features_decisions_occurence.loc[features_decisions_occurence.index == idx].Decision.values[0] != new_value:
-                            if self.variables["show_results"]:
+                            if self.settings.show_results:
                                 print("Current value: {}".format(features_decisions_occurence.loc[features_decisions_occurence.index == idx].Decision.values[0]))
                                 print("New value: {}".format(new_value))
                             for idy, row_general_occurence in general_features_occurence.iterrows():
                                 if (row_general_occurence[self.feature_labels].values == row_decision_table[self.feature_labels]).all():
-                                    if self.variables["show_results"]:
+                                    if self.settings.show_results:
                                         print(row_general_occurence.Occurence)
                                     self.changed_decisions = self.changed_decisions + row_general_occurence.Occurence
                                     break
@@ -112,31 +112,32 @@ class InconsistenciesRemover(object):
         
         general_features_occurence = features_decisions_occurence.copy()
         self.samples = features_decisions_occurence.Occurence.sum()
+        old_size = len(self.features_table)
 
-        if self.variables["show_results"]:
+        if self.settings.show_results:
             display(features_decisions_occurence)
         features_occurence = self.getOccurenceOfRows(self.features_table,
                                                 ['Image', 'Decision'])
 
 
-        if self.variables["show_results"]:
+        if self.settings.show_results:
             display(features_occurence)
 
 
         features_occurence = self.getOccurenceOfRows(self.features_table,
                                                 ['Decision'])
-        if self.variables["show_results"]:
+        if self.settings.show_results:
             display(features_occurence)
 
         number_of_conflicts_decision = features_occurence[
             features_occurence.Occurence > 1]
-        if self.variables["show_results"]:
+        if self.settings.show_results:
             print("\nW tylu konflikach występuje:")
             display(number_of_conflicts_decision)
 
         number_of_clear_decision = self.getNumberOfClearDecision(
             features_occurence, features_decisions_occurence)
-        if self.variables["show_results"]:
+        if self.settings.show_results:
             print("\nTyle jest wystąpień takich czystych decyzji:")
             display(number_of_clear_decision)
 
@@ -146,7 +147,7 @@ class InconsistenciesRemover(object):
             how='inner',
             on=self.feature_labels).drop(['Occurence_x', "Occurence_y"], axis=1)
         
-        if self.variables["show_results"]:
+        if self.settings.show_results:
             print("\nTe problemy należy rozwiązać:")
             display(problems_to_solve)
 
@@ -157,7 +158,8 @@ class InconsistenciesRemover(object):
                                                         axis=1).drop_duplicates(
                                                             keep='first',
                                                             inplace=False)
-        if self.variables["show_results"]:
+        self.changed_decisions = old_size - len(decision_table)
+        if self.settings.show_results:
             print("Tablica decyzyjna po usunięciu duplikatów i niespójności")
             display(decision_table)
 

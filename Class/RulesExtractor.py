@@ -2,13 +2,14 @@ import numpy as np
 import boolean
 import skfuzzy as fuzz
 from skfuzzy import control as ctrl
+from tqdm import tqdm
 
 class RulesExtractor(object):
 
-    def __init__(self, features_table, reduct, variables):
+    def __init__(self, features_table, reduct, settings):
         self.features_table = features_table.copy()
         self.reduct = reduct
-        self.variables = variables
+        self.settings = settings
         self.algebra = boolean.BooleanAlgebra()
         self.TRUE, self.FALSE, self.NOT, self.AND, self.OR, self.Symbol = self.algebra.definition()
 
@@ -47,7 +48,7 @@ class RulesExtractor(object):
     def getFeatureNames(self, features_table):
         feature_names = np.asarray(features_table.columns)[0:-1]
 
-        if self.variables["show_results"]:
+        if self.settings.show_results:
             print(feature_names)
 
         return feature_names
@@ -73,13 +74,12 @@ class RulesExtractor(object):
                         new_expression = new_subexpression
 
             if new_expression is "(" or not new_expression:
-                # print("Expression empty")
                 simplified_implicant = ""
             else:
                 simplified_implicant = self.algebra.parse(new_expression).simplify()
             implicants.append(simplified_implicant)
 
-        if self.variables["show_results"]:
+        if self.settings.show_results:
                 print(implicants)
 
         return implicants
@@ -89,11 +89,10 @@ class RulesExtractor(object):
 
         rules_table = []
 
-        for x in features_table['Decision'].drop_duplicates():
-            rules_table.append(
-                features_table.loc[features_table['Decision'] == x].index.tolist())
+        rules_table.append(features_table.loc[features_table['Decision'] == self.settings.class_2].index.tolist())
+        rules_table.append(features_table.loc[features_table['Decision'] == self.settings.class_1].index.tolist())
 
-        if self.variables["show_results"]:
+        if self.settings.show_results:
             print("Connection between implicants and rules:" + str(rules_table))
 
         return rules_table
@@ -140,7 +139,7 @@ class RulesExtractor(object):
         for idx_i, i in enumerate(implicants):
             new_implicants.append(self.modifyImplicants(i, idx_i, features_table, features))
 
-        if self.variables["show_results"]:
+        if self.settings.show_results:
             print(new_implicants)
 
         return new_implicants
@@ -168,7 +167,6 @@ class RulesExtractor(object):
 
     def generateRules(self, rule_antecedents, d_results, decision):
         rules = []
-        
         for idx, x in enumerate(rule_antecedents):
             if x:
                 rules.append(ctrl.Rule(x, decision[d_results[idx]]))
@@ -178,16 +176,16 @@ class RulesExtractor(object):
 
     def worker(self, decision_table, features, d_results, decision):
         self.features_table = decision_table.copy()
+
         symetric_discernibility_matrix, features_table = self.generateSymetricDiscernibilityMatrix()
         if np.size(symetric_discernibility_matrix, 0) == 1:
             return None
         implicant_matrix, features_table = self.generateImplicantsMatrix(symetric_discernibility_matrix, decision_table)
         feature_names = self.getFeatureNames(features_table)
         implicants = self.generateImplicants(implicant_matrix, feature_names)
-        index_of_rules_table = self.getIndexOfRulesTable(decision_table)
-        rule_implicants = self.modifyImplicantsForRules(implicants, decision_table, features)
-        rule_antecedents = self.generateRuleAntecedents(index_of_rules_table, rule_implicants) 
-        # rules = self.generateRules(rule_antecedents, d_results, decision)
+        self.index_of_rules_table = self.getIndexOfRulesTable(decision_table)
+        self.rule_implicants = self.modifyImplicantsForRules(implicants, decision_table, features)
+        self.rule_antecedents = self.generateRuleAntecedents(self.index_of_rules_table, self.rule_implicants) 
 
-        return rule_antecedents
+        return self.rule_antecedents
     

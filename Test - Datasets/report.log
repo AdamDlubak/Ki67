@@ -1,0 +1,24 @@
+2019-05-26 15:28:08,692 - pyswarms.backend.generators - ERROR - Bounds and/or init_pos should be of size (7,)
+Traceback (most recent call last):
+  File "C:\Programy\Anaconda\envs\py35\lib\site-packages\pyswarms\backend\generators.py", line 72, in generate_swarm
+    lb, ub = bounds
+ValueError: not enough values to unpack (expected 2, got 1)
+2019-05-26 15:35:36,335 - pyswarms.single.global_best - INFO - Optimize for 20 iters with {'w': 0.9, 'c2': 0.3, 'c1': 0.5}
+2019-05-26 15:49:52,629 - pyswarms.single.global_best - INFO - Optimize for 20 iters with {'w': 0.9, 'c2': 0.3, 'c1': 0.5}
+2019-05-26 15:51:06,567 - pyswarms.single.global_best - INFO - Optimize for 20 iters with {'w': 0.9, 'c2': 0.3, 'c1': 0.5}
+2019-05-26 15:51:58,970 - pyswarms.single.global_best - INFO - Optimize for 20 iters with {'w': 0.9, 'c2': 0.3, 'c1': 0.5}
+2019-05-26 15:53:12,767 - pyswarms.backend.generators - ERROR - Bounds and/or init_pos should be of size (3,)
+Traceback (most recent call last):
+  File "C:\Programy\Anaconda\envs\py35\lib\site-packages\pyswarms\backend\generators.py", line 80, in generate_swarm
+    low=min_bounds, high=max_bounds, size=(n_particles, dimensions)
+  File "mtrand.pyx", line 1320, in mtrand.RandomState.uniform
+  File "mtrand.pyx", line 265, in mtrand.cont2_array
+ValueError: shape mismatch: objects cannot be broadcast to a single shape
+2019-05-26 15:53:39,557 - pyswarms.single.global_best - INFO - Optimize for 20 iters with {'w': 0.9, 'c2': 0.3, 'c1': 0.5}
+2019-05-26 15:54:18,587 - pyswarms.single.global_best - INFO - Optimize for 20 iters with {'w': 0.9, 'c2': 0.3, 'c1': 0.5}
+2019-05-26 15:54:46,557 - pyswarms.single.global_best - INFO - Optimize for 20 iters with {'w': 0.9, 'c2': 0.3, 'c1': 0.5}
+2019-05-26 15:55:00,653 - pyswarms.single.global_best - INFO - Optimize for 20 iters with {'w': 0.9, 'c2': 0.3, 'c1': 0.5}
+2019-05-26 16:00:06,055 - pyswarms.single.global_best - INFO - Optimize for 20 iters with {'w': 0.9, 'c2': 0.3, 'c1': 0.5}
+2019-05-26 16:02:27,596 - pyswarms.single.global_best - INFO - Optimize for 20 iters with {'w': 0.9, 'c2': 0.3, 'c1': 0.5}
+2019-05-26 16:09:52,944 - pyswarms.single.global_best - INFO - Optimization finished | best cost: 0.6000000000000001, best pos: [0.60517656 0.42552795 0.27318836 0.61850701 0.69171153 0.53046346
+ 0.24001415]

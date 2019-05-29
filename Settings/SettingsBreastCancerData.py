@@ -1,43 +1,49 @@
-import Settings.GeneralSettings as generalSettings
+class Settings(object):
 
-dataset = "Breast Cancer Data"
-class_1 = "One"
-class_2 = "Zero"
+    def __init__(self, generalSettings):
+        self.dataset = "Blood"
+        self.class_1 = "Donated"
+        self.class_2 = "Not donated"
 
-variables = {
-    "dataset_name": dataset,
-    "data_folder": generalSettings.data_folder + dataset + ".csv",
-    "backup_folder": generalSettings.backup_folder + dataset + "/" + str(generalSettings.gausses) + " Gausses/",
-    "results_folder": generalSettings.results_folder,
-    "results_file": dataset + ".csv",
+        self.dataset_name = self.dataset
+        self.data_folder = generalSettings.data_folder + self.dataset + ".csv"
+        self.backup_folder = generalSettings.backup_folder + self.dataset + "/" + str(generalSettings.gausses) + " Gausses/"
 
-    "class_1": class_1,
-    "class_2": class_2,
-    
-    "feature_numbers": 5,
-    "gausses": generalSettings.gausses,
-    "test_type": generalSettings.test_type,
+        self.results_folder = generalSettings.results_folder
+        self.results_file = self.dataset + ".csv"
+        
+        self.feature_numbers = 4
+        self.gausses = generalSettings.gausses
+        self.test_type = generalSettings.test_type
+        self.style = generalSettings.style
+        self.adjustment_value = generalSettings.adjustment_value
+        if self.adjustment_value == -1:
+            self.adjustment = "Mean"
+        elif self.adjustment_value == 0:
+            self.adjustment = "Center"
+        else:
+            self.adjustment = "Optymalized"
+        self.is_training = generalSettings.is_training
+        self.default_s_value = generalSettings.default_s_value
 
-    "set_min": 0,
-    "set_max": 1,
-    "fuzzy_sets_precision": 0.01,
-    "show_results": False,
-    "load_previous_data": False,
+        self.set_min = 0
+        self.set_max = 1
+        self.fuzzy_sets_precision = 0.001
+        self.show_results = generalSettings.show_results
+        self.load_previous_data = False
 
-    "verylow": "Very low",
-    "low": "Low",
-    "middlelowminus": "Middle Low -",
-    "middlelow": "Middle Low",
-    "middlelowplus": "Middle Low +",
-    "middle": "Middle",
-    "middlehighminus": "Middle High -",
-    "middlehigh": "Middle High",
-    "middlehighplus": "Middle High +",
-    "high": "High",
-    "veryhigh": "Very High",
-}
+        self.verylow = "Very low"
+        self.low = "Low"
+        self.middlelowminus = "Middle Low -"
+        self.middlelow = "Middle Low"
+        self.middlelowplus = "Middle Low +"
+        self.middle = "Middle"
+        self.middlehighminus = "Middle High -"
+        self.middlehigh = "Middle High"
+        self.middlehighplus = "Middle High +"
+        self.high = "High"
+        self.veryhigh = "Very High"
 
-constraints = (slice(0, 1, 0.05), )
-s_function_width = generalSettings.s_function_width
-sigma_mean_params = generalSettings.sigma_mean_params
-n_folds = 10
+        self.constraints = (slice(0.2, 0.8, 0.05), )
+        self.s_function_width = generalSettings.s_function_width
+        self.n_folds = 5

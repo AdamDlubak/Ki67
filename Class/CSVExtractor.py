@@ -2,12 +2,12 @@ import pandas as pd
 
 class CSVExtractor(object):
     
-    def __init__(self, variables):
-        self.path = variables['data_folder']
-        self.variables = variables
+    def __init__(self, settings):
+        self.path = settings.data_folder
+        self.settings = settings
 
     def showResults(self, df):
-        if self.variables["show_results"]:
+        if self.settings.show_results:
             display(df)
 
     def extractFeatures(self):

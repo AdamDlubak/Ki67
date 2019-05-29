@@ -5,13 +5,13 @@ from tqdm import tqdm
 from matplotlib import pyplot as plt
 
 class FeatureExtractor(object):
-    def __init__(self, fuzzifier, variables):
+    def __init__(self, fuzzifier, settings):
         self.features_table = []
         self.fuzzifier = fuzzifier
-        self.variables = variables
+        self.settings = settings
         
     def showResults(self, table):
-        if self.variables["show_results"]:
+        if self.settings.show_results:
            display(table)
 
     def thresholdImage(self, image):

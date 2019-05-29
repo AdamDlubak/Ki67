@@ -7,24 +7,22 @@ from matplotlib import pyplot as plt
 from skimage.color import rgb2hsv, rgb2hed
 
 class PixelFeatureExtractor(object):
-    def __init__(self, variables, fuzzifier):
+    def __init__(self, settings, fuzzifier):
         self.features_table = []
         self.fuzzifier = fuzzifier
-        self.variables = variables
+        self.settings = settings
         
     def showResults(self, table):
-        if self.variables["show_results"]:
+        if self.settings.show_results:
            display(table)
-
 
     def getFeatureTableFromImages(self, image_reader, test_mode = False):
         self.features_table = pd.DataFrame()
         for idx, image in enumerate(image_reader.images):
-
+            
             r_image, g_image, b_image = self.splitIntoRgbChannels(image)
             # h_image, s_image, v_image = self.splitIntoHsvChannels(image)
             h_hed_image, e_hed_image, d_hed_image = self.splitIntoHedChannels(image)
-
             data_columns = {
                 self.fuzzifier.features[0].label: r_image.ravel(),
                 self.fuzzifier.features[1].label: g_image.ravel(),
@@ -38,17 +36,16 @@ class PixelFeatureExtractor(object):
             }
 
             tmp_features_table = pd.DataFrame(data = data_columns)
+
             tmp_features_table["Image"] = image_reader.image_names[idx]
             tmp_features_table["Decision"] = image_reader.image_decisions[idx]
             tmp_features_table["Predicted Value"] = ""
-        
             if test_mode == False:
-        
                 tmp_features_table = tmp_features_table[(tmp_features_table[[
                     self.fuzzifier.features[0].label,   
                     self.fuzzifier.features[1].label,
                     self.fuzzifier.features[2].label,
-                ]] != 0).all(axis=1)]
+                ]] != 0).any(axis=1)]
 
             if idx == 0:
                 self.features_table = tmp_features_table
@@ -71,7 +68,6 @@ class PixelFeatureExtractor(object):
         v = hsv_image[:, :, 2]
         return h, s, v
 
-
     def splitIntoHedChannels(self, image):
         hed_image = rgb2hed(image)
         h = hed_image[:, :, 0]
@@ -79,18 +75,9 @@ class PixelFeatureExtractor(object):
         d = hed_image[:, :, 2]
         return h, e, d
 
-    def normalizeFeatures(self):
-        for x in self.fuzzifier.features:
-            self.features_table[x.label] = (
-                self.features_table[x.label] - self.features_table[x.label].min()) / (
-                    self.features_table[x.label].max() - self.features_table[x.label].min())
-
-        self.showResults(self.features_table)
-
     def getFeaturesTable(self):
         return self.features_table
 
     def worker(self, image_reader, test_mode):
         self.getFeatureTableFromImages(image_reader, test_mode)
-        self.normalizeFeatures()
         return self.getFeaturesTable()

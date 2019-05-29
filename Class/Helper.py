@@ -12,28 +12,28 @@ class Helper(object):
         is_max = s == s.max()
         return ['font-weight: bold; text-decoration: underline' if v else '' for v in is_max]
         
-    def pairPlot(self, variables, data_file = "all_normalized_features_table", output_image_name = "features_pairplot"):
-        df = pickle.load(open(variables['backup_folder'] + variables['pairplot_data_file']  + ".p", "rb"))
-        variables, _, _ = pickle.load(open(variables['backup_folder'] + "parameters.p", "rb"))
+    def pairPlot(self, settings, data_file = "all_normalized_features_table", output_image_name = "features_pairplot"):
+        df = pickle.load(open(settings.backup_folder + settings.pairplot_data_file  + ".p", "rb"))
+        settings, _, _ = pickle.load(open(settings.backup_folder + "parameters.p", "rb"))
 
-        seaborn_plot = sns.pairplot(df[df.columns[0:variables['feature_numbers'] + 2]], 
-                            hue=df.columns[variables['feature_numbers'] + 1])
+        seaborn_plot = sns.pairplot(df[df.columns[0:settings.feature_numbers + 2]], 
+                            hue=df.columns[settings.feature_numbers + 1])
 
         seaborn_plot.savefig(output_image_name + ".png")
 
-    def printDF(self, variables):
-        df = pickle.load(open(variables['backup_folder'] + "sorted_decision.p", "rb"))
+    def printDF(self, settings):
+        df = pickle.load(open(settings.backup_folder + "sorted_decision.p", "rb"))
         display(df)
 
-    def featuresHistogram(self, variables, data_file = "all_normalized_features_table"):
-        df = pickle.load(open(variables['backup_folder'] + data_file + ".p", "rb"))
-        variables, _, _ = pickle.load(open(variables['backup_folder'] + "parameters.p", "rb"))
+    def featuresHistogram(self, settings, data_file = "all_normalized_features_table"):
+        df = pickle.load(open(settings.backup_folder + data_file + ".p", "rb"))
+        settings, _, _ = pickle.load(open(settings.backup_folder + "parameters.p", "rb"))
 
-        for idx, feature in enumerate(df[df.columns[0 : variables['feature_numbers']]]):
+        for idx, feature in enumerate(df[df.columns[0 : settings.feature_numbers]]):
             plt.figure(figsize=(15,10))
-            low = df[df["Decision"] == variables['class_1']][feature]
-            high = df[df["Decision"] == variables['class_2']][feature]
-            plt.hist([low, high], 150, label=[variables['class_1'], variables['class_2']])
+            low = df[df["Decision"] == settings.class_1][feature]
+            high = df[df["Decision"] == settings.class_2][feature]
+            plt.hist([low, high], 150, label=[settings.class_1, settings.class_2])
             plt.title(df.columns[idx])
             plt.legend(loc='upper right')
             plt.show()
@@ -63,11 +63,22 @@ class Helper(object):
         display(df)
         return df
 
-    def loadDatasetResults(self, dataset, show = True):
+    def loadDatasetResults(self, dataset, data_type, head_number = -1, show = True):
         df = pd.read_csv(open("Results/" + dataset + ".csv", "rb"))
-        df_to_print = df.style.apply(self.boldMax, subset=['Accuracy'])
+        df["Mean F-Score"] = (df["F-Score A"] + df["F-Score B"]) / 2
+        df = df.loc[~(df["Operation"] == "BruteForce K-Fold Threshold")]
+        if data_type == "Test":
+            df = df.loc[df["Data Type"] == "Test"].sort_values(by=["Mean F-Score"], ascending=False)
+        elif data_type == "Train":
+            df = df.loc[df["Data Type"] == "Train"].sort_values(by=["Mean F-Score"], ascending=False)
+        else:
+            df = df.sort_values(by=["Mean F-Score"], ascending=False)
+
+        if head_number >= 0:
+            df = df.head(head_number)
+        
         if show:
-            display(df_to_print)
+            display(df.style.apply(self.boldMax, subset=['Mean F-Score']))
         return df
 
     def getParamsToTests(self, dataset_name, gausses):
@@ -108,13 +119,13 @@ class Helper(object):
         return results
 
     def saveFuzzificationStats(self, data):
-        columns = ["Dataset", "Gausses","Samples", "Train s.", "Test s.", "Changed s.", "% changed s.", "Implicants", "Features", "F. after reduct"]
+        columns = ["Dataset", "Style", "Gausses", "Adjustment", "Samples", "Train s.", "Test s.", "Changed s.", "% changed s.", "Implicants", "Features", "F. after reduct"]
         try:
             df = pickle.load(open("Summaries/Fuzzification Statistics.p", "rb"))
         except (OSError, IOError):
             df = pd.DataFrame(columns = columns)
         
-        df = df[(df[columns[0]] != data[0]) | (df[columns[1]] != data[1])]
+        df = df[(df[columns[0]] != data[0]) | (df[columns[1]] != data[1]) | (df[columns[2]] != data[2]) | (df[columns[3]] != data[3])]
         row = pd.DataFrame([data], columns = columns)
         df = df.append(row)
         df = df.sort_values(by=["Dataset", "Gausses"]).reset_index(drop=True)

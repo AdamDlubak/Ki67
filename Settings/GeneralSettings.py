@@ -5,14 +5,17 @@
 # 3 - Test Set
 # 4 - Training Set + Test Set
 
-mode = 4
-gausses = 5
+mode = 4                                  # 1 / 2 / 3 / 4
+gausses = 9                              # 3 / 5 / 7 / 9 / 11 
 
-test_type = "New Gauss functions"
-
+test_type = "Gauss Functions Style"       # Gauss Style / Gauss Number / Gauss Adjustment / S-Function Adjustment
+style = "Gaussian Equal"                  # Gaussian Equal / Gaussian Progressive
+adjustment_value = -2                     # Center == -2 / Mean == -1 / Optymalized == Value
+default_s_value = 0.5                       
+is_training = True                        # True / False
+show_results = False                      # True / False
 data_folder = "../Data/"
 backup_folder = "Pickle/"
 results_folder = "Results/"
 
 s_function_width = 5
-sigma_mean_params = -1
