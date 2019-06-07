@@ -30,8 +30,8 @@ class PixelFeatureExtractor(object):
                 # self.fuzzifier.features[0].label: h_image.ravel(),
                 # self.fuzzifier.features[1].label: s_image.ravel(),
                 # self.fuzzifier.features[2].label: v_image.ravel(),
-                # self.fuzzifier.features[3].label: h_hed_image.ravel(),
-                self.fuzzifier.features[3].label: e_hed_image.ravel(),
+                self.fuzzifier.features[3].label: h_hed_image.ravel(),
+                # self.fuzzifier.features[3].label: e_hed_image.ravel(),
                 self.fuzzifier.features[4].label: d_hed_image.ravel(),
             }
 
