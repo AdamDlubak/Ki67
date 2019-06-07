@@ -25,7 +25,12 @@ class LoadImage(object):
         if self.settings.load_previous_data:
                 features_df = pickle.load(open(self.settings.backup_folder + "features_df.p", "rb"))
         else:
-            imageReader = ImageReader(self.settings.data_folder)
+            if test_mode == 1:
+                imageReader = ImageReader(self.settings.data_folder_test, test_mode)
+            elif test_mode == 0:
+                imageReader = ImageReader(self.settings.data_folder_train, test_mode)
+            else:
+                imageReader = ImageReader(self.settings.data_folder_veryfication + self.settings.file_name + "/", test_mode)
             imageReader.loadImages(self.settings)
 
             pixelFeatureExtractor = PixelFeatureExtractor(self.settings, fuzzifier)
@@ -49,16 +54,19 @@ class LoadImage(object):
             fuzzifier.features[0].label: 0, 
             fuzzifier.features[1].label: 0, 
             fuzzifier.features[2].label: 0, 
+            # fuzzifier.features[0].label: 0, 
+            # fuzzifier.features[1].label: 0, 
+            # fuzzifier.features[2].label: 0, 
             fuzzifier.features[3].label: -0.364297, 
             fuzzifier.features[4].label: 0.106373, 
-            fuzzifier.features[5].label: -0.265494, 
+            # fuzzifier.features[3].label: -0.265494, 
             "Image": "Black",
             "Decision": self.settings.class_2,
             "Predicted Value": ""
         }, ignore_index=True)
 
-        class_1_features_occurence = features_df.loc[features_df.Decision == self.settings.class_1"]]["Decision.count()
-        class_2_features_occurence = features_df.loc[features_df.Decision == self.settings.class_2"]]["Decision.count()
+        class_1_features_occurence = features_df.loc[features_df.Decision == self.settings.class_1]["Decision"].count()
+        class_2_features_occurence = features_df.loc[features_df.Decision == self.settings.class_2]["Decision"].count()
 
         features_result = "{} ({}/{})".format(features_df.shape[0], class_1_features_occurence, class_2_features_occurence)
         train_result = features_result
@@ -77,9 +85,12 @@ class LoadImage(object):
         df["F0"] = (df["F0"] - 0) / (255 - 0)
         df["F1"] = (df["F1"] - 0) / (255 - 0)
         df["F2"] = (df["F2"] - 0) / (255 - 0)
-        df["F3"] = (abs(df["F3"]) - 0.15) / (0.70 - 0.15)
-        df["F4"] = (abs(df["F4"]) - 0.00) / (0.25 - 0.00)
-        df["F5"] = (abs(df["F5"]) - 0.10) / (0.60 - 0.10)
+        # df["F0"] = (df["F0"] - 0) / (359 - 0)
+        # df["F1"] = (df["F1"] - 0) / (100 - 0)
+        # df["F2"] = (df["F2"] - 0) / (100 - 0)
+        df["F3"] = (df["F3"] - (-0.6321590442939683)) / (-0.2519704435684328 - (-0.6321590442939683))
+        df["F4"] = (df["F4"] - (0.031940895147339714)) / (0.22622970342958737 - (0.031940895147339714))
+        # df["F3"] = (df["F3"] - (-0.5279642432765967)) / (-0.1818549107256712 - (-0.5279642432765967))
 
         return df
          

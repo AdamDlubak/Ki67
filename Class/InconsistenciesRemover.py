@@ -92,16 +92,17 @@ class InconsistenciesRemover(object):
             for idx, row_decision_table in features_decisions_occurence.iterrows():
                 if (row[self.feature_labels].values == row_decision_table[self.feature_labels]).all():
                         if features_decisions_occurence.loc[features_decisions_occurence.index == idx].Decision.values[0] != new_value:
-                            if self.settings.show_results:
-                                print("Current value: {}".format(features_decisions_occurence.loc[features_decisions_occurence.index == idx].Decision.values[0]))
-                                print("New value: {}".format(new_value))
-                            for idy, row_general_occurence in general_features_occurence.iterrows():
-                                if (row_general_occurence[self.feature_labels].values == row_decision_table[self.feature_labels]).all():
-                                    if self.settings.show_results:
-                                        print(row_general_occurence.Occurence)
-                                    self.changed_decisions = self.changed_decisions + row_general_occurence.Occurence
-                                    break
+                            # if self.settings.show_results:
+                            # print("Current value: {}".format(features_decisions_occurence.loc[features_decisions_occurence.index == idx].Decision.values[0]))
+                            # print("New value: {}".format(new_value))
+                            # for idy, row_general_occurence in general_features_occurence.iterrows():
+                            #     if (row_general_occurence[self.feature_labels].values == row_decision_table[self.feature_labels]).all():
+                            #         if self.settings.show_results:
+                            #             print(row_general_occurence.Occurence)
+                            #         break
                             features_decisions_occurence.loc[idx, 'Decision'] = new_value
+                            self.changed_decisions = self.changed_decisions + 1
+
 
         return features_decisions_occurence
 
@@ -158,7 +159,7 @@ class InconsistenciesRemover(object):
                                                         axis=1).drop_duplicates(
                                                             keep='first',
                                                             inplace=False)
-        self.changed_decisions = old_size - len(decision_table)
+        # self.changed_decisions = old_size - len(features_decisions_occurence)
         if self.settings.show_results:
             print("Tablica decyzyjna po usunięciu duplikatów i niespójności")
             display(decision_table)

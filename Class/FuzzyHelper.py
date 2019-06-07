@@ -14,6 +14,7 @@ class FuzzyHelper(object):
 
     def __init__(self, settings):
         self.settings = settings
+        tqdm.pandas()
         
     def setDecisions(self, row, threshold):
         if row['Predicted Value'] > threshold:
@@ -23,6 +24,7 @@ class FuzzyHelper(object):
         return row
 
     def makePrediction(self, row, classing, rules_feature_names, decision):
+
         input_values = {}
         for x in rules_feature_names:
             input_values[x] = row[x]
@@ -43,6 +45,22 @@ class FuzzyHelper(object):
 
         row['Predicted Value'] = classing.output['Decision']
         return row
+
+    def makePredictionKi67(self, row, classing, rules_feature_names, decision):
+        if (row[["F0", "F1", "F2"]].values == [0, 0, 0]).all():
+            row['Predicted Value'] = 1.0
+            return row
+        else:
+            input_values = {}
+            for x in rules_feature_names:
+                input_values[x] = row[x]
+
+            classing.inputs(input_values)
+            classing.compute()
+            row['Predicted Value'] = classing.output['Decision']
+            return row
+
+
 
     def defineClassOne(self, x, center_point, width):
         y = np.zeros(len(x))
@@ -106,9 +124,13 @@ class FuzzyHelper(object):
     
     def sFunctionsWorker(self, df, x_range, center_point, width, rules_extractor, rule_antecedents, d_results, decision):
         decision, classing, rules_feature_names = self.prepareRules(False, x_range, center_point, width, rules_extractor, rule_antecedents, d_results, decision)
+        print("Level 1")
         df = self.prepareDataFrame(df, rules_feature_names)
-        df = df.apply(self.makePrediction, classing = classing, rules_feature_names = rules_feature_names, decision = decision, axis=1)
+        print("Level 2")
+        df = df.progress_apply(self.makePrediction, classing = classing, rules_feature_names = rules_feature_names, decision = decision, axis=1)
+        print("Level 3")
         accuracy, df = self.thresholdOptValue(center_point, df)
+        print("Level 4")
         return accuracy, df
 
     def adjustmentsOptBrute(self, adjustment_values, settings, fuzzify, train_data_for_worker, valueTest):
@@ -130,6 +152,13 @@ class FuzzyHelper(object):
     def sFunctionsValue(self, center_point, width, df, settings, x_range, rules_extractor, rule_antecedents, d_results, decision):
         accuracy, df = self.sFunctionsWorker(df, x_range, center_point, width, rules_extractor, rule_antecedents, d_results, decision)
         return accuracy, df
+
+    def sFunctionsValueKi67(self, center_point, width, df, settings, x_range, rules_extractor, rule_antecedents, d_results, decision):
+        decision, classing, rules_feature_names = self.prepareRules(False, x_range, center_point, width, rules_extractor, rule_antecedents, d_results, decision)
+        df = self.prepareDataFrame(df, rules_feature_names)
+        df = df.progress_apply(self.makePredictionKi67, classing = classing, rules_feature_names = rules_feature_names, decision = decision, axis=1)
+        df = df.apply(self.setDecisions, threshold = 0.5, axis=1)
+        return df
 
     def thresholdWorker(self, threshold, df):
         df = df.apply(self.setDecisions, threshold = threshold, axis=1)
@@ -162,6 +191,15 @@ class FuzzyHelper(object):
     def saveResults(self, results_path, series):
         path = results_path
         columns = ["Test type", "Dataset", "Style", "Gausses", "Adjustment", "Data Type", "Operation", "Accuracy", "Precision A", "Precision B", "Recall A", "Recall B", "F-Score A", "F-Score B", "Support A", "Support B", "S-Functions Center", "S-Functions Width", "Threshold", "Time (s)", "Test date"]
+        df = pd.DataFrame(columns=columns)
+        series = series + [datetime.datetime.now()]
+        s = pd.Series(series, index=columns)
+        df = df.append(s, ignore_index = True)
+        df.to_csv(path, index = False, header=(not os.path.exists(path)), mode="a")
+
+    def saveResultsKi67(self, results_path, series):
+        path = results_path
+        columns = ["Test type", "Dataset", "Image name", "Style", "Gausses", "Adjustment", "Searched Class", "Data Type", "Operation", "S-Functions Center", "S-Functions Width", "Threshold", "Time (s)", "Test date"]        
         df = pd.DataFrame(columns=columns)
         series = series + [datetime.datetime.now()]
         s = pd.Series(series, index=columns)

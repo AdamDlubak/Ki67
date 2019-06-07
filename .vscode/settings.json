@@ -1,7 +1,7 @@
 {
     "python.linting.pylintEnabled": true,
     "python.pythonPath": "C:\\Programy\\Anaconda\\envs\\py35\\python.exe",
-    "window.zoomLevel": 0,
+    "window.zoomLevel": 1,
     "terminal.integrated.shell.windows": "C:\\WINDOWS\\System32\\cmd.exe",
     "editor.suggestSelection": "first",
     "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",

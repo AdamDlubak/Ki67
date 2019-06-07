@@ -132,6 +132,22 @@ class Helper(object):
         display(df)
         pickle.dump(df, open("Summaries/Fuzzification Statistics.p", "wb"))
 
+
+    def saveFuzzificationStatsKi67(self, data):
+        columns = ["Dataset", "Style", "Gausses", "Adjustment", "Searched Class", "Features type", "Samples", "Train s.", "Test s.", "Changed s.", "% changed s.", "Implicants", "Features", "F. after reduct", "Recall 1", "Recall 2", "Recall 3", "Average Recall",  "Execution Time"]
+        try:
+            df = pickle.load(open("Results/Fuzzification Statistics.p", "rb"))
+        except (OSError, IOError):
+            df = pd.DataFrame(columns = columns)
+        
+        df = df[(df[columns[0]] != data[0]) | (df[columns[1]] != data[1]) | (df[columns[2]] != data[2]) | (df[columns[3]] != data[3]) | (df[columns[4]] != data[4]) | (df[columns[5]] != data[5])]
+        row = pd.DataFrame([data], columns = columns)
+        df = df.append(row)
+        df = df.sort_values(by=["Dataset", "Searched Class"]).reset_index(drop=True)
+        display(df)
+        pickle.dump(df, open("Results/Fuzzification Statistics.p", "wb"))
+
+
     def saveFuzzificationParameters(self, data):
         begin_data = data[0:3]
         rest_data = [round(x, 3) for x in data[3:]]

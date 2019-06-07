@@ -49,9 +49,9 @@ class ValueTest(object):
             print("Time: {}".format(measured_time))
             print("-----------------------------------------------------------------------------------")
 
-            df = df.sort_values(by=["Predicted Value"])
-            self.decision.view()
-            display(df.style.apply(self.highlightClassOne, axis = 1))
+            # df = df.sort_values(by=["Predicted Value"])
+            # self.decision.view()
+            # display(df.style.apply(self.highlightClassOne, axis = 1))
         pickle.dump(df, open(settings.backup_folder + self.data_type + "_df_results.p", "wb"))
 
 

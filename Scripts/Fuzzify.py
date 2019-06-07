@@ -1,3 +1,4 @@
+import time
 import pickle
 import numpy as np
 from sklearn.model_selection import train_test_split
@@ -49,9 +50,11 @@ class Fuzzify(object):
             return changed_decisions, features_number_after_reduct, implicants_number, features, decision_table_with_reduct, reductor
 
     def worker(self, settings, sigma_mean_params):
+        start = time.time()
         self.settings = settings
         changed_decisions, features_number_after_reduct, implicants_number, fuzzify_parameters = self.fuzzifyFeatures(-1, sigma_mean_params)
-        return changed_decisions, features_number_after_reduct, implicants_number, fuzzify_parameters
+        end = time.time()
+        return changed_decisions, features_number_after_reduct, implicants_number, fuzzify_parameters, end - start
 
     def workerKFold(self, settings, train_features_df, sigma_mean_params):
         self.settings = settings

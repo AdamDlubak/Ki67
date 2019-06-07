@@ -3,15 +3,17 @@ from matplotlib import pyplot as plt
 from skimage import io
 
 class ImageReader(object):
-    def __init__(self, path):
+    def __init__(self, path, test_mode = 0):
         self.path = path
         self.images = []
         self.image_names = []
         self.image_decisions = []
+        self.test_mode = test_mode
 
     def loadImages(self, settings):
-        for name in listdir(self.path):
-            file_path = self.path + name
+        if self.test_mode == -1:
+            name = "fragment.png"
+            file_path = self.path + name 
             print(file_path)
             self.images.append(io.imread(file_path))
             self.image_names.append(name.replace(settings.extension, ''))
@@ -19,7 +21,17 @@ class ImageReader(object):
                 self.image_decisions.append(settings.class_1)
             else:
                 self.image_decisions.append(settings.class_2)
-        
+        else:
+            for name in listdir(self.path):
+                file_path = self.path + name
+                print(file_path)
+                self.images.append(io.imread(file_path))
+                self.image_names.append(name.replace(settings.extension, ''))
+                if name[:-4] == settings.class_1:
+                    self.image_decisions.append(settings.class_1)
+                else:
+                    self.image_decisions.append(settings.class_2)
+
     def printImage(self, image, title=""):
         fig = plt.figure()
         fig.suptitle(title, fontsize=13)

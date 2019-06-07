@@ -6,7 +6,11 @@
 # 4 - Training Set + Test Set
 
 mode = 4                                  # 1 / 2 / 3 / 4
-gausses = 9                              # 3 / 5 / 7 / 9 / 11 
+gausses = 3                              # 3 / 5 / 7 / 9 / 11 
+
+class_1 = "brown"
+file_name = "Testowe zdjęcie"
+features_type = 1
 
 test_type = "Gauss Functions Style"       # Gauss Style / Gauss Number / Gauss Adjustment / S-Function Adjustment
 style = "Gaussian Equal"                  # Gaussian Equal / Gaussian Progressive

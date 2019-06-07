@@ -27,12 +27,12 @@ class PixelFeatureExtractor(object):
                 self.fuzzifier.features[0].label: r_image.ravel(),
                 self.fuzzifier.features[1].label: g_image.ravel(),
                 self.fuzzifier.features[2].label: b_image.ravel(),
-                # self.fuzzifier.features[3].label: h_image.ravel(),
-                # self.fuzzifier.features[4].label: s_image.ravel(),
-                # self.fuzzifier.features[5].label: v_image.ravel(),
+                # self.fuzzifier.features[0].label: h_image.ravel(),
+                # self.fuzzifier.features[1].label: s_image.ravel(),
+                # self.fuzzifier.features[2].label: v_image.ravel(),
                 self.fuzzifier.features[3].label: h_hed_image.ravel(),
                 self.fuzzifier.features[4].label: e_hed_image.ravel(),
-                self.fuzzifier.features[5].label: d_hed_image.ravel(),
+                # self.fuzzifier.features[3].label: d_hed_image.ravel(),
             }
 
             tmp_features_table = pd.DataFrame(data = data_columns)

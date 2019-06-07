@@ -1,0 +1,4 @@
+Test type,Dataset,Image name,Style,Gausses,Adjustment,Searched Class,Data Type,Operation,S-Functions Center,S-Functions Width,Threshold,Time (s),Test date
+Gauss Functions Style,Ki67,1628-05,Gaussian Equal,3,Optymalized,brown,Test,No Optymalization,0.5,5,---,450.10900020599365,2019-06-06 19:06:39.469374
+Gauss Functions Style,Ki67,18583-04,Gaussian Equal,3,Optymalized,brown,Test,No Optymalization,0.5,5,---,437.43735790252686,2019-06-06 19:14:19.211733
+Gauss Functions Style,Ki67,31374-10,Gaussian Equal,3,Optymalized,brown,Test,No Optymalization,0.5,5,---,418.2780873775482,2019-06-06 19:21:37.863964
