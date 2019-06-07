@@ -1,9 +1,9 @@
 class Settings(object):
 
     def __init__(self, generalSettings):
-        self.dataset = "Blood"
-        self.class_1 = "Donated"
-        self.class_2 = "Not donated"
+        self.dataset = "Breast Cancer Data"
+        self.class_1 = "Zero"
+        self.class_2 = "One"
 
         self.dataset_name = self.dataset
         self.data_folder = generalSettings.data_folder + self.dataset + ".csv"
@@ -12,7 +12,7 @@ class Settings(object):
         self.results_folder = generalSettings.results_folder
         self.results_file = self.dataset + ".csv"
         
-        self.feature_numbers = 4
+        self.feature_numbers = 5
         self.gausses = generalSettings.gausses
         self.test_type = generalSettings.test_type
         self.style = generalSettings.style

@@ -148,6 +148,7 @@ class RulesExtractor(object):
     def generateRuleAntecedents(self, index_of_rules_table, new_implicants):
 
         rule_antecedents = []
+        tmp_rule = ""
         for x in index_of_rules_table:
             for idx, y in enumerate(x):
                 tmp_result = new_implicants[y]
