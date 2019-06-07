@@ -2,8 +2,8 @@ class Settings(object):
 
     def __init__(self, generalSettings):
         self.dataset = "Pima Indians Diabetes"
-        self.class_1 = "Negatif"
-        self.class_2 = "Positif"
+        self.class_1 = "Negative"
+        self.class_2 = "Positive"
 
         self.dataset_name = self.dataset
         self.data_folder = generalSettings.data_folder + self.dataset + ".csv"

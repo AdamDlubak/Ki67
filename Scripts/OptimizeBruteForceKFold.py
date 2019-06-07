@@ -13,10 +13,6 @@ from Scripts.ValueTest import ValueTest as ValueTest
 from Class.FuzzyHelper import FuzzyHelper as FuzzyHelper
 from Class.RulesExtractor import RulesExtractor as RulesExtractor
 
-import pyswarms as ps
-from pyswarms.utils.plotters import plot_cost_history, plot_contour, plot_surface
-
-
 class OptimizeBruteForceKFold(object):
 
     def __init__(self, settings, s_function_width):

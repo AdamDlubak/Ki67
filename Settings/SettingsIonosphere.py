@@ -12,7 +12,7 @@ class Settings(object):
         self.results_folder = generalSettings.results_folder
         self.results_file = self.dataset + ".csv"
         
-        self.feature_numbers = 34
+        self.feature_numbers = 33
         self.gausses = generalSettings.gausses
         self.test_type = generalSettings.test_type
         self.style = generalSettings.style
