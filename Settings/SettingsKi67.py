@@ -12,7 +12,7 @@ class Settings(object):
         self.adjustment_value = generalSettings.adjustment_value
         if self.adjustment_value == -1:
             self.adjustment = "Mean"
-        elif self.adjustment_value == 0:
+        elif self.adjustment_value == -2:
             self.adjustment = "Center"
         else:
             self.adjustment = "Optymalized"
@@ -33,7 +33,7 @@ class Settings(object):
         self.results_folder = generalSettings.results_folder
         self.results_file = self.dataset + ".csv"
         
-        self.feature_numbers = 5
+        self.feature_numbers = 2
         self.gausses = generalSettings.gausses
         self.test_type = generalSettings.test_type
         self.style = generalSettings.style

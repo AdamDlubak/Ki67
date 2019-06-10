@@ -20,19 +20,19 @@ class PixelFeatureExtractor(object):
         self.features_table = pd.DataFrame()
         for idx, image in enumerate(image_reader.images):
             
-            r_image, g_image, b_image = self.splitIntoRgbChannels(image)
+            # r_image, g_image, b_image = self.splitIntoRgbChannels(image)
             # h_image, s_image, v_image = self.splitIntoHsvChannels(image)
             h_hed_image, e_hed_image, d_hed_image = self.splitIntoHedChannels(image)
             data_columns = {
-                self.fuzzifier.features[0].label: r_image.ravel(),
-                self.fuzzifier.features[1].label: g_image.ravel(),
-                self.fuzzifier.features[2].label: b_image.ravel(),
+                # self.fuzzifier.features[0].label: r_image.ravel(),
+                # self.fuzzifier.features[1].label: g_image.ravel(),
+                # self.fuzzifier.features[2].label: b_image.ravel(),
                 # self.fuzzifier.features[0].label: h_image.ravel(),
                 # self.fuzzifier.features[1].label: s_image.ravel(),
                 # self.fuzzifier.features[2].label: v_image.ravel(),
-                self.fuzzifier.features[3].label: h_hed_image.ravel(),
+                self.fuzzifier.features[0].label: h_hed_image.ravel(),
                 # self.fuzzifier.features[3].label: e_hed_image.ravel(),
-                self.fuzzifier.features[4].label: d_hed_image.ravel(),
+                self.fuzzifier.features[1].label: d_hed_image.ravel(),
             }
 
             tmp_features_table = pd.DataFrame(data = data_columns)
@@ -40,12 +40,12 @@ class PixelFeatureExtractor(object):
             tmp_features_table["Image"] = image_reader.image_names[idx]
             tmp_features_table["Decision"] = image_reader.image_decisions[idx]
             tmp_features_table["Predicted Value"] = ""
-            if test_mode == False:
-                tmp_features_table = tmp_features_table[(tmp_features_table[[
-                    self.fuzzifier.features[0].label,   
-                    self.fuzzifier.features[1].label,
-                    self.fuzzifier.features[2].label,
-                ]] != 0).any(axis=1)]
+            if test_mode == 0:
+                # tmp_features_table = tmp_features_table[(tmp_features_table[] != -0.364297)
+                tmp_features_table = tmp_features_table[(tmp_features_table[self.fuzzifier.features[0].label] != -0.364297) | (tmp_features_table[self.fuzzifier.features[1].label] != -0.265494)]
+                    # self.fuzzifier.features[1].label,
+                    # self.fuzzifier.features[2].label,
+                
 
             if idx == 0:
                 self.features_table = tmp_features_table

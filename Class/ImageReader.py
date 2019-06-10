@@ -1,6 +1,8 @@
 from os import listdir
 from matplotlib import pyplot as plt
 from skimage import io
+from skimage.transform import rescale
+from skimage.color import gray2rgb
 
 class ImageReader(object):
     def __init__(self, path, test_mode = 0):
@@ -21,6 +23,25 @@ class ImageReader(object):
                 self.image_decisions.append(settings.class_1)
             else:
                 self.image_decisions.append(settings.class_2)
+        if self.test_mode == 1:
+            image = io.imread(self.path + "base.png")
+            mask = io.imread(self.path + "mask-gt.png")
+            image_rescaled = rescale(image, 1.0 / 3.0, anti_aliasing=False)
+            mask_rescaled = rescale(mask, 1.0 / 3.0, anti_aliasing=False)
+            mask_3_channels = gray2rgb(mask_rescaled)
+            image_rescaled_mask = image_rescaled * mask_3_channels
+
+            from matplotlib import pyplot as plt
+
+            fig, ax = plt.subplots(ncols=2, nrows=1, figsize=(10, 6))
+            ax[0].imshow(image_rescaled, cmap=plt.cm.gray)
+            ax[1].imshow(image_rescaled_mask, cmap=plt.cm.gray)
+            plt.show()
+            print("File: {}".format(self.path + "base.png"))
+            print("Width: {}\t Height: {}".format(image_rescaled_mask.shape[0], image_rescaled_mask.shape[1]))
+            self.images.append(image_rescaled_mask)
+            self.image_names.append(settings.file_name)
+            self.image_decisions.append(settings.class_1)
         else:
             for name in listdir(self.path):
                 file_path = self.path + name

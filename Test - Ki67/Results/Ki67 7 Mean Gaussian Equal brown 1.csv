@@ -1,4 +1,0 @@
-Test type,Dataset,Image name,Style,Gausses,Adjustment,Searched Class,Data Type,Operation,S-Functions Center,S-Functions Width,Threshold,Time (s),Test date
-Gauss Functions Style,Ki67,1628-05,Gaussian Equal,7,Mean,brown,Test,Choose Features group,0.5,5,---,332.3033468723297,2019-06-07 20:28:28.786315
-Gauss Functions Style,Ki67,18583-04,Gaussian Equal,7,Mean,brown,Test,Choose Features group,0.5,5,---,363.73638439178467,2019-06-07 20:34:48.210965
-Gauss Functions Style,Ki67,31374-10,Gaussian Equal,7,Mean,brown,Test,Choose Features group,0.5,5,---,350.15893483161926,2019-06-07 20:40:52.057530

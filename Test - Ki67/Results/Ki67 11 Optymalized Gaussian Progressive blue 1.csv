@@ -1,4 +1,0 @@
-Test type,Dataset,Image name,Style,Gausses,Adjustment,Searched Class,Data Type,Operation,S-Functions Center,S-Functions Width,Threshold,Time (s),Test date
-Gauss Functions Style,Ki67,1628-05,Gaussian Progressive,11,Optymalized,blue,Test,Choose Features group,0.5,5,---,491.6334898471832,2019-06-07 20:25:37.748675
-Gauss Functions Style,Ki67,18583-04,Gaussian Progressive,11,Optymalized,blue,Test,Choose Features group,0.5,5,---,564.9624855518341,2019-06-07 20:35:20.748838
-Gauss Functions Style,Ki67,31374-10,Gaussian Progressive,11,Optymalized,blue,Test,Choose Features group,0.5,5,---,558.9958627223969,2019-06-07 20:44:57.222797

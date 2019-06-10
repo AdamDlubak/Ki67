@@ -26,7 +26,7 @@ class LoadImage(object):
                 features_df = pickle.load(open(self.settings.backup_folder + "features_df.p", "rb"))
         else:
             if test_mode == 1:
-                imageReader = ImageReader(self.settings.data_folder_test, test_mode)
+                imageReader = ImageReader(self.settings.data_folder_test + self.settings.file_name + "/", test_mode)
             elif test_mode == 0:
                 imageReader = ImageReader(self.settings.data_folder_train, test_mode)
             else:
@@ -51,15 +51,15 @@ class LoadImage(object):
   
     def prepareTraining(self, features_df, fuzzifier):
         features_df = features_df.append({
-            fuzzifier.features[0].label: 0, 
-            fuzzifier.features[1].label: 0, 
-            fuzzifier.features[2].label: 0, 
             # fuzzifier.features[0].label: 0, 
             # fuzzifier.features[1].label: 0, 
             # fuzzifier.features[2].label: 0, 
-            fuzzifier.features[3].label: -0.364297, 
+            # fuzzifier.features[0].label: 0, 
+            # fuzzifier.features[1].label: 0, 
+            # fuzzifier.features[2].label: 0, 
+            fuzzifier.features[0].label: -0.364297, 
             # fuzzifier.features[4].label: 0.106373, 
-            fuzzifier.features[4].label: -0.265494, 
+            fuzzifier.features[1].label: -0.265494, 
             "Image": "Black",
             "Decision": self.settings.class_2,
             "Predicted Value": ""
@@ -82,15 +82,15 @@ class LoadImage(object):
 
     def normalizeFeatures(self, df):
 
-        df["F0"] = (df["F0"] - 0) / (255 - 0)
-        df["F1"] = (df["F1"] - 0) / (255 - 0)
-        df["F2"] = (df["F2"] - 0) / (255 - 0)
+        # df["F0"] = (df["F0"] - 0) / (255 - 0)
+        # df["F1"] = (df["F1"] - 0) / (255 - 0)
+        # df["F2"] = (df["F2"] - 0) / (255 - 0)
         # df["F0"] = (df["F0"] - 0) / (359 - 0)
         # df["F1"] = (df["F1"] - 0) / (100 - 0)
         # df["F2"] = (df["F2"] - 0) / (100 - 0)
-        df["F3"] = (df["F3"] - (-0.6321590442939683)) / (-0.2519704435684328 - (-0.6321590442939683))
+        df["F0"] = (df["F0"] - (-0.6321590442939683)) / (-0.2519704435684328 - (-0.6321590442939683))
         # df["F3"] = (df["F3"] - (0.031940895147339714)) / (0.22622970342958737 - (0.031940895147339714))
-        df["F4"] = (df["F4"] - (-0.5279642432765967)) / (-0.1818549107256712 - (-0.5279642432765967))
+        df["F1"] = (df["F1"] - (-0.5279642432765967)) / (-0.1818549107256712 - (-0.5279642432765967))
 
         return df
          

@@ -47,7 +47,7 @@ class FuzzyHelper(object):
         return row
 
     def makePredictionKi67(self, row, classing, rules_feature_names, decision):
-        if (row[["F0", "F1", "F2"]].values == [0, 0, 0]).all():
+        if (row[["F0", "F1"]].values == [-0.364297, -0.265494]).all():
             row['Predicted Value'] = 1.0
             return row
         else:

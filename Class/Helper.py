@@ -132,6 +132,20 @@ class Helper(object):
         display(df)
         pickle.dump(df, open("Summaries/Fuzzification Statistics.p", "wb"))
 
+    def saveKi67Segmentation(self, data):
+        columns = ["Image", "Resolution", "Pixels", "Blue Pixels", "Blue Recall", "Blue Time", "Brown Pixels", "Brown Recall", "Brown Time", "Avg. Recall", "Total Time"]
+        try:
+            df = pickle.load(open("Ki67 Statistics.p", "rb"))
+        except (OSError, IOError):
+            df = pd.DataFrame(columns = columns)
+        
+        df = df[(df[columns[0]] != data[0]) | (df[columns[1]] != data[1])]
+        row = pd.DataFrame([data], columns = columns)
+        df = df.append(row)
+        df = df.sort_values(by=["Image"]).reset_index(drop=True)
+        display(df)
+        pickle.dump(df, open("Ki67 Statistics.p", "wb"))
+
 
     def saveFuzzificationStatsKi67(self, data):
         columns = ["Dataset", "Style", "Gausses", "Adjustment", "Searched Class", "Features type", "Samples", "Train s.", "Test s.", "Changed s.", "% changed s.", "Implicants", "Features", "F. after reduct", "Recall 1", "Recall 2", "Recall 3", "Average Recall",  "Execution Time"]
