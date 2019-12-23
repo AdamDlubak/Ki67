@@ -12,8 +12,8 @@ class_1 = "blue"
 file_name = "Testowe zdjęcie"
 features_type = 1
 
-test_type = "Ki67 Segmentation"       # Gauss Style / Gauss Number / Gauss Adjustment / S-Function Adjustment
-style = "Gaussian Equal"                  # Gaussian Equal / Gaussian Progressive
+test_type = "10-Fold Validation"       # Gauss Style / Gauss Number / Gauss Adjustment / S-Function Adjustment
+style = "Gaussian Progressive"                  # Gaussian Equal / Gaussian Progressive
 adjustment_value = -1                     # Center == -2 / Mean == -1 / Optymalized == Value
 default_s_value = 0.5                       
 is_training = True                        # True / False

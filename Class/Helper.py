@@ -64,7 +64,7 @@ class Helper(object):
         return df
 
     def loadDatasetResults(self, dataset, data_type, head_number = -1, show = True):
-        df = pd.read_csv(open("Results/" + dataset + ".csv", "rb"))
+        df = pd.read_csv("C:/Users/Adam/Documents/Studia/Magisterka/Projekt/Test - Datasets/Results/" + dataset + ".csv", sep=",")
         df["Mean F-Score"] = (df["F-Score A"] + df["F-Score B"]) / 2
         df = df.loc[~(df["Operation"] == "BruteForce K-Fold Threshold")]
         if data_type == "Test":

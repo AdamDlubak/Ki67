@@ -135,7 +135,7 @@ class Fuzzifier(object):
         if mean == -2:
             mean = 0.5
         
-        _, sigma = norm.fit(values)
+        _, sigma = norm.fit(values) 
 
         if self.settings.show_results:
             print("Feature " + str(idx) + ":")

@@ -17,9 +17,10 @@ class Settings(object):
         self.test_type = generalSettings.test_type
         self.style = generalSettings.style
         self.adjustment_value = generalSettings.adjustment_value
+        # Center == -2 / Mean == -1 / Optymalized == Value
         if self.adjustment_value == -1:
             self.adjustment = "Mean"
-        elif self.adjustment_value == 0:
+        elif self.adjustment_value == -2:
             self.adjustment = "Center"
         else:
             self.adjustment = "Optymalized"

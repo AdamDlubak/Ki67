@@ -1,3 +1,0 @@
-Test type,Dataset,Style,Gausses,Adjustment,Data Type,Operation,Accuracy,Precision A,Precision B,Recall A,Recall B,F-Score A,F-Score B,Support A,Support B,S-Functions Center,S-Functions Width,Threshold,Time (s),Test date
-Gauss Functions Style,HTRU,Gaussian Progressive,5,Mean,Train,Value S-Functions,0.09155491698595147,0.09155491698595147,0.0,1.0,0.0,0.1677513711151737,0.0,1147,11381,0.5,5,---,314.55600929260254,2019-05-25 00:50:49.271458
-Gauss Functions Style,HTRU,Gaussian Progressive,5,Mean,Test,Value S-Functions,0.09162011173184358,0.09162011173184358,0.0,1.0,0.0,0.16786079836233367,0.0,492,4878,0.5,5,---,175.78401064872742,2019-05-25 01:01:27.702457

@@ -28,7 +28,7 @@ class Settings(object):
 
         self.set_min = 0
         self.set_max = 1
-        self.fuzzy_sets_precision = 0.001
+        self.fuzzy_sets_precision = 0.0001
         self.show_results = generalSettings.show_results
         self.load_previous_data = False
 

@@ -39,6 +39,7 @@ class FuzzyHelper(object):
             print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
             return row
             
+            
         if self.settings.show_results:
             decision.view(sim=classing)
             print(classing.output['Decision'])
